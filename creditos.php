@@ -42,6 +42,14 @@ $fechaHoy = new DateTime();
 		<div class="row noselect">
 			<div class="col-lg-12 contenedorDeslizable ">
 			<!-- Empieza a meter contenido principal -->
+			<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="row col-sm-6 col-md-3">
+					<p><strong>Filtro de Créditos:</strong></p>
+					<input type="text" class="form-control" placeholder="CR-00**" id="txtSoloBuscaCreditos">
+				</div>
+			</div>
+		</div>
 	<?php if( isset($_GET['credito']) ):
 		$codCredito=$base58->decode($_GET['credito']); ?>
 
@@ -337,6 +345,7 @@ $fechaHoy = new DateTime();
 		<? endif; //fin de get Credito ?>
 		<? if( !isset($_GET['titular']) && !isset($_GET['credito']) && !isset($_GET['record']) ): ?>
 		<h3 class="purple-text text-lighten-1">Zona créditos</h3><hr>
+		
 		<? endif; ?>
 				
 			<!-- Fin de contenido principal -->
@@ -466,13 +475,7 @@ $('#txtAddCliente').keypress(function (e) {
 });
 $('#btnBuscarClientesDni').click(function () {
 	if( $('#txtAddCliente').val()!='' ){
-		var valor = $('#txtAddCliente').val().toUpperCase();
 		
-		if( valor.indexOf('CR-')==0 ){
-			$.post('php/58encode.php', {texto: valor.replace('CR-', '') }, function(resp) {
-				window.location.href = 'creditos.php?credito='+resp;
-			});
-		}else{
 			$('#rowClientesEncontrados').children().remove();
 			$.ajax({url: 'php/ubicarCliente.php', type: 'POST', data: { buscar: $('#txtAddCliente').val() }}).done(function(resp) {
 				//console.log(resp);
@@ -492,7 +495,7 @@ $('#btnBuscarClientesDni').click(function () {
 					}
 				});
 			$('#mostrarResultadosClientes').modal('show');
-		}
+		
 	}
 });
 $('#rowClientesEncontrados').on('click','.btnSelectCliente', function() {
@@ -576,6 +579,16 @@ $('#btnSimularPagos').click(function() {
 			break;
 	}
 	} //fin de else
+});
+$('#txtSoloBuscaCreditos').keypress(function (e) { 
+	var valor = $('#txtSoloBuscaCreditos').val().toUpperCase();
+	if(e.keyCode == 13){ 
+		if( valor.indexOf('CR-')==0 ){
+			$.post('php/58encode.php', {texto: valor.replace('CR-', '') }, function(resp) {
+				window.location.href = 'creditos.php?credito='+resp;
+			});
+		}
+	}
 });
 function agregarClienteCanasta(idCl, cargo) { //console.log( idCl );
 	$.ajax({url: 'php/ubicarDatosCliente.php', type: 'POST', data: { idCli: idCl }}).done(function(resp) {
