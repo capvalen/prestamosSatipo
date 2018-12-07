@@ -241,7 +241,12 @@ $('#txtDniCliente').focusout(function () {
 	}
 });
 $('#btnGuardarClienteNew').click(function() {
-	$('#modalNewCliente .divError .spanError').text('Un Error').parent().removeClass('hidden');
+	if( $('#txtDniCliente').val()=='' || $('#txtDniCliente').val().length<8 ){
+		$('#modalNewCliente .divError .spanError').text('Falta ingresar un D.N.I. válido').parent().removeClass('hidden');
+	}else if( $('#txtPaternoCliente').val()=='' || $('#txtMaternoCliente').val()=='' || $('#txtNombresCliente').val()==''  ){
+		$('#modalNewCliente .divError .spanError').text('Falta ingresar un D.N.I. válido').parent().removeClass('hidden');
+	}
+	
 	
 	var casa =0;
 
