@@ -4,7 +4,8 @@ require("conkarl.php");
 
 $fechaCompr=date('Y-m-d');
 $sql = mysqli_query($esclavo,"SELECT idCuadre FROM `cuadre` cu
-where DATE_FORMAT(`fechaInicio`, '%Y-%m-%d') = '{$fechaCompr}' and cu.cuaVigente =1");
+where  cu.cuaVigente =1"); //DATE_FORMAT(`fechaInicio`, '%Y-%m-%d') = '{$fechaCompr}' and
+//=> Ya no por fechas, verifica si hay una caja abierta desde ayer
 
 $numRow = mysqli_num_rows($sql);
 $row = mysqli_fetch_array($sql, MYSQLI_ASSOC);

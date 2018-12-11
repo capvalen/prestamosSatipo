@@ -113,7 +113,7 @@ input[type=number] {-moz-appearance:textfield;}
 .btn-primary.btn-outline:focus,.btn-success.btn-outline:focus,.btn-info.btn-outline:focus,.btn-warning.btn-outline:focus,.btn-danger.btn-outline:focus,
 .btn-primary.btn-outline:active,.btn-success.btn-outline:active,.btn-info.btn-outline:active,.btn-warning.btn-outline:active,.btn-danger.btn-outline:active,
 .btn-primary.btn-outline:hover,.btn-success.btn-outline:hover,.btn-info.btn-outline:hover,.btn-warning.btn-outline:hover,.btn-danger.btn-outline:hover,
-/*.btn-negro.btn-outline:focus,*/.btn-negro.btn-outline:active,.btn-negro.btn-outline:hover,/*.btn-morado.btn-outline:focus,*/
+.btn-negro.btn-outline:focus,.btn-negro.btn-outline:active,.btn-negro.btn-outline:hover,/*.btn-morado.btn-outline:focus,*/
 .btn-morado.btn-outline:active,.btn-morado.btn-outline:hover, .btn-indigo.btn-outline:active,.btn-indigo.btn-outline:hover,
 .btn-azul.btn-outline:active,.btn-azul.btn-outline:hover,.btn-dark.btn-outline:active,.btn-dark.btn-outline:hover,
 .btn-morita.btn-outline:active,.btn-morita.btn-outline:hover,.btn-rosaKit.btn-outline:active,.btn-rosaKit.btn-outline:hover,

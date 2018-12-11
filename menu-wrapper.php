@@ -3,7 +3,7 @@ $nomArchivo = basename($_SERVER['PHP_SELF']); ?>
 <div id="sidebar-wrapper">
 	<ul class="sidebar-nav">
 		<div class="logoEmpresa ocultar-mostrar-menu">
-			<img class="img-responsive" src="images/empresa.png?version=1.1" alt="">
+			<img class="img-responsive" src="images/empresa.png?version=1.2" alt="">
 		</div>
 		<li <?php if($nomArchivo =='principal.php') echo 'class="active"'; ?>>
 				<a href="#!"><i class="icofont-home"></i> Inicio</a>

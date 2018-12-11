@@ -8,14 +8,19 @@ $base58 = new StephenHill\Base58();
 $nomEmpresa = $_COOKIE['cknombreEmpresa'];
 $idPresPost = $base58->decode($_GET['prestamo']);
 
-$sql = "SELECT * FROM `prestamo`
-WHERE idPrestamo = {$idPresPost}";
+$sql = "SELECT pre.*, lower(concat(TRIM(c.cliApellidoPaterno), ' ', TRIM(c.cliApellidoMaterno), ', ', TRIM(c.cliNombres))) as cliNombres, c.cliDni, tp.tpreDescipcion, lower( concat(a.addrDireccion, ' ', a.addrNumero, ' ', d.distrito, ' - ', p.provincia )) as `direccion`
+FROM `prestamo` pre
+inner join tipoprestamo tp on tp.idTipoPrestamo = pre.idTipoPrestamo
+inner join involucrados i on i.idPrestamo = pre.idPrestamo
+inner join cliente c on c.idCliente = i.idCliente
+inner join address a on a.idAddress= c.cliDireccionNegocio 
+inner join distrito d on d.idDistrito= a.idDistrito
+inner join provincia p on p.idProvincia = a.idProvincia
+WHERE pre.idPrestamo = {$idPresPost} and i.idTipoCliente = 1";
 
 if($llamado= $conection->query($sql)){
   $respuesta = $llamado->fetch_assoc();
 }
-
-
 
 ?>
 
@@ -31,10 +36,11 @@ if($llamado= $conection->query($sql)){
 <body>
 <style>
   h5{font-weight: 700;}
+  .mayuscula{text-transform: capitalize;}
 </style> 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-3"><img src="./../images/empresa.PNG" class="img-responsive"> </div>
+      <div class="col-xs-3"><img src="./../images/empresa.png" class="img-responsive"> </div>
       <div class="col-xs-8 text-center">
         <strong><h5><?= $nomEmpresa; ?></h5></strong>
         <strong><h5>Cronograma de pagos</h5></strong>
@@ -42,16 +48,16 @@ if($llamado= $conection->query($sql)){
     </div>
     <div class="row">
       <div class="col-xs-7">
-        <p><strong>Cliente:</strong> <span>Carlos Alex Pariona Valencia</span></p>
-        <p><strong>DNI:</strong> <span>44475064</span></p>
+        <p><strong>Cliente:</strong> <span class="mayuscula"><?= $respuesta['cliNombres']?></span></p>
+        <p><strong>DNI:</strong> <span><?= $respuesta['cliDni']?></span></p>
         <p><strong>N° Crédito:</strong> <span>CR-<?= $idPresPost; ?></span></p>
-        <p><strong>Dirección de negocio:</strong> <span>Jr. Ciro Alegría 141 Dtpo 501 - Huancayo</span></p>
+        <p><strong>Dirección de negocio:</strong> <span class="mayuscula"><?= $respuesta['direccion'];?></span></p>
       </div>
       <div class="col-xs-5">
         <p><strong>Oficina:</strong> <span><?= $_COOKIE['cksucursalEmpresa'] ?></span></p>
         <p><strong>Asesor:</strong> <span><?= $_COOKIE['ckAtiende'] ?></span></p>
-        <p><strong>Periodo:</strong> <span>-</span></p>
-        <p><strong>F. Desembolso:</strong> <span>18/10/2018</span></p>
+        <p><strong>Periodo:</strong> <span><?= $respuesta['tpreDescipcion']; ?></span></p>
+        <p><strong>F. Desembolso:</strong> <span><? if($respuesta['presFechaDesembolso']=='0000-00-00 00:00:00'){echo 'Pendiente';}else{$feRepo = new DateTime($respuesta['presFechaDesembolso']); echo $feRepo->format('d/m/Y');} ?></span></p>
       </div>
     </div>
     <div class="row">

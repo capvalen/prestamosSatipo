@@ -58,7 +58,7 @@ $fechaHoy = new DateTime();
 	<?php
 
 	$sqlCr="SELECT presFechaAutom, presMontoDesembolso, presPeriodo, tpr.tpreDescipcion,
-	u.usuNombres,
+	u.usuNombres, preInteresPers,
 	case presFechaDesembolso when '0000-00-00 00:00:00' then 'Desembolso pendiente' else presFechaDesembolso end as `presFechaDesembolso`,
 	case presAprobado when 0 then 'Sin aprobar' when 2 then 'Rechazado' else 'Aprobado' end as `presAprobado`, 
 	case when ua.usuNombres is Null then '-' else ua.usuNombres end  as `usuarioAprobador`, pre.idTipoPrestamo
@@ -84,6 +84,7 @@ $fechaHoy = new DateTime();
 			$_POST['periodo'] = $rowCr['presPeriodo'];
 			$_POST['monto']= $rowCr['presMontoDesembolso'];
 			$_POST['modo']= $rowCr['idTipoPrestamo'];
+			$intBase = $rowCr['presMontoDesembolso']*$rowCr['preInteresPers']/100;
 			?>
 		<div class="container-fluid" id="contenedorCreditosFluid">
 			<p><strong>Datos de crédito</strong></p>
@@ -96,6 +97,7 @@ $fechaHoy = new DateTime();
 				<div class="col-sm-2"><label for="">Fecha desemboslo</label><p><?php if($rowCr['presFechaDesembolso']=='Desembolso pendiente'){echo $rowCr['presFechaDesembolso'];}else{$fechaDes= new DateTime($rowCr['presFechaDesembolso']); echo $fechaDes->format('j/m/Y h:m a');} ?></p></div>
 				<div class="col-sm-2"><label for="">Desembolso</label><p>S/ <?= number_format($rowCr['presMontoDesembolso'],2); ?></p></div>
 				<div class="col-sm-2"><label for="">Periodo</label><p><?= $rowCr['tpreDescipcion']; ?></p></div>
+				<div class="col-sm-2"><label for="">Interés</label><p><?= $rowCr['preInteresPers']."%"; ?></p></div>
 				<div class="col-sm-2"><label for="">Analista</label><p><?= $rowCr['usuNombres']; ?></p></div>
 			</div>
 
@@ -157,6 +159,7 @@ $fechaHoy = new DateTime();
 					<th>Sub-ID</th>
 					<th>Fecha programada</th>
 					<th>Cuota</th>
+					<th>Interés</th>
 					<th>Cancelación</th>
 					<th>Pago</th>
 					<th>Saldo</th>
@@ -172,9 +175,10 @@ $fechaHoy = new DateTime();
 				<tr>
 					<td>SP-<?= $rowCuot['idCuota']; ?></td>
 					<td><?php $fechaCu= new DateTime($rowCuot['cuotFechaPago']); echo $fechaCu->format('d/m/Y'); ?></td>
-					<td><?= number_format($rowCuot['cuotCuota'],2); ?></td>
+					<td><? if($k>=1) {echo number_format($rowCuot['cuotCuota'],2);} ?></td>
+					<td><? if($k>=1) {echo number_format($intBase,2);} ?></td>
 					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'): echo "Desembolso"; elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; else: echo $rowCuot['cuotFechaCancelacion']; endif;  ?></td>
-					<td><?= number_format($rowCuot['cuotPago'],2); ?></td>
+					<td><? if($k>=1) {echo number_format($rowCuot['cuotPago'],2);} ?></td>
 					<td><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
 					<td><?php if( in_array($_COOKIE['ckPower'], $soloAdmis) &&  $rowCuot['idTipoPrestamo']=='79' && $rowCr['presFechaDesembolso']<>'Desembolso pendiente' && $k>=1):
 					$diasDebe2=$fechaHoy ->diff($fechaCu);
@@ -298,6 +302,10 @@ $fechaHoy = new DateTime();
 							<select class="form-control selectpicker" id="sltTipoPrestamo" title="Seleccione un préstamo" data-width="100%" data-live-search="true" data-size="15">
 								<?php include 'php/OPTTipoPrestamo.php'; ?>
 							</select>
+						</div>
+						<div class="col-xs-6 col-sm-3">
+							<label for="">Interés</label>
+							<input type="number" class="form-control esNumero noEsDecimal text-center" id="txtInteres" value=0>
 						</div>
 						<div class="col-xs-6 col-sm-3">
 							<label for="">Periodo</label>
@@ -521,6 +529,7 @@ $('#btnSimularPagos').click(function() {
 		modo: $('#sltTipoPrestamo').val(),
 		periodo: $('#txtPeriodo').val(),
 		monto: $('#txtMontoPrinc').val(),
+		tasaInt: $('#txtInteres').val(),
 		fDesembolso: moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
 		primerPago: moment($('#dtpFechaPrimerv3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD')
 		}}).done(function(resp) {// console.log(resp)
@@ -531,36 +540,37 @@ $('#btnSimularPagos').click(function() {
 	switch ($('#sltTipoPrestamo').val()) {
 		
 		case "1":
-			$('#divVariables').append(`<p><strong>TED:</strong> <span>0.66%</span></p>`);
+			// $('#divVariables').append(`<p><strong>TED:</strong> <span>0.66%</span></p>`);
 			$('#theadResultados').html(`	<th>#</th>
 					<th>Fecha</th>
 					<th>Cuota</th>
-					<th class="hidden">Interés</th>
+					<th>Interés</th>
 					<th class="hidden">Amortización</th>
 					<th>Saldo</th>
 					<th class="hidden">Saldo Real</th>`);
 			break;
 		case "2":
-			$('#divVariables').append(`<p><strong>TES:</strong> <span>1.52%</span></p>`);
+			// $('#divVariables').append(`<p><strong>TES:</strong> <span>1.52%</span></p>`);
 			$('#theadResultados').html(`	<th>#</th>
 					<th>Fecha</th>
 					<th>Cuota</th>
-					<th class="hidden">Interés</th>
+					<th>Interés</th>
 					<th class="hidden">Amortización</th>
 					<th>Saldo</th>
 					<th class="hidden">Saldo Real</th>`);
 			break;
 		case "4":
-			$('#divVariables').append(`<p><strong>TEQ:</strong> <span>2.95%</span></p>`);
+		case "3":
+			// $('#divVariables').append(`<p><strong>TEQ:</strong> <span>2.95%</span></p>`);
 			$('#theadResultados').html(`	<th>#</th>
 					<th>Fecha</th>
 					<th>Cuota</th>
-					<th class="hidden">Interés</th>
+					<th>Interés</th>
 					<th class="hidden">Amortización</th>
 					<th>Saldo</th>
 					<th class="hidden">Saldo Real</th>`);
 			break;
-		case "3":
+		case "99":
 			$('#theadResultados').html(`	<th>#</th>
 					<th>Fecha pago</th>
 					<th class="hidden">Días</th>
@@ -633,13 +643,11 @@ if(cargo==1){
 }
 }//fin de function
 $('#btnGuardarCred').click(function() {
-	if( $('#sltTipoPrestamo').val()=='' || $('#txtPeriodo').val()=='' || $('#txtMontoPrinc').val()=='' ||  parseFloat($('#txtPeriodo').val())==0 || parseFloat($('#txtMontoPrinc').val())==0 ){
+	if( $('#sltTipoPrestamo').val()=='' || $('#txtPeriodo').val()=='' || $('#txtInteres').val()=='' || $('#txtMontoPrinc').val()=='' ||  parseFloat($('#txtPeriodo').val())==0 || parseFloat($('#txtMontoPrinc').val())==0 ){
 		//console.log('falta algo')
 		$('#labelFaltaCombos').removeClass('hidden');
 	}else{
 		$('#labelFaltaCombos').addClass('hidden');
-
-	
 
 		var clientArr = [];
 		$.each( $('#tbodySocios tr') , function(i, objeto){
@@ -651,6 +659,7 @@ $('#btnGuardarCred').click(function() {
 			modo: $('#sltTipoPrestamo').val(),
 			periodo: $('#txtPeriodo').val(),
 			monto: $('#txtMontoPrinc').val(),
+			tasaInt: $('#txtInteres').val(),
 			fDesembolso: moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
 			primerPago: moment($('#dtpFechaPrimerv3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD')
 		}}).done(function(resp) {
