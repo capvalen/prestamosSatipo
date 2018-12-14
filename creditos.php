@@ -158,28 +158,40 @@ $fechaHoy = new DateTime();
 				<tr>
 					<th>Sub-ID</th>
 					<th>Fecha programada</th>
-					<th>Cuota</th>
+
+					<th>Capital</th>
 					<th>Interés</th>
+					<th>Cuota</th>
 					<th>Cancelación</th>
 					<th>Pago</th>
-					<th>Saldo</th>
+					<th class="hidden">Saldo</th>
 					<th>@</th>
 				</tr>
 				</thead>
 				<tbody>
 			<?php 
-			$sqlCuot= "SELECT * FROM prestamo_cuotas where idPrestamo = {$codCredito}
+			$sqlCuot= "SELECT prc.*, pre.preInteresPers, pre.presMontoDesembolso, pre.presPeriodo FROM prestamo_cuotas prc
+			inner join prestamo pre on pre.idPrestamo = prc.idPrestamo
+			where prc.idPrestamo = {$codCredito}
 			order by cuotFechaPago asc";
 			if($respCuot = $cadena->query($sqlCuot)){ $k=0;
-				while($rowCuot = $respCuot->fetch_assoc()){ ?>
+				while($rowCuot = $respCuot->fetch_assoc()){
+					$monto = $rowCuot['presMontoDesembolso'];
+					$interes = $rowCuot['preInteresPers'];
+					$plazo = $rowCuot['presPeriodo'];
+					$capitalPartido = $monto/$plazo;
+					$intGanado = $monto*$interes/100/$plazo;
+
+					?>
 				<tr>
 					<td>SP-<?= $rowCuot['idCuota']; ?></td>
 					<td><?php $fechaCu= new DateTime($rowCuot['cuotFechaPago']); echo $fechaCu->format('d/m/Y'); ?></td>
+					<td><? if($k>=1) {echo number_format($capitalPartido,2);} ?></td>
+					<td><? if($k>=1) {echo number_format($intGanado,2);} ?></td>
 					<td><? if($k>=1) {echo number_format($rowCuot['cuotCuota'],2);} ?></td>
-					<td><? if($k>=1) {echo number_format($intBase,2);} ?></td>
 					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'): echo "Desembolso"; elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; else: echo $rowCuot['cuotFechaCancelacion']; endif;  ?></td>
 					<td><? if($k>=1) {echo number_format($rowCuot['cuotPago'],2);} ?></td>
-					<td><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
+					<td class="hidden"><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
 					<td><?php if( in_array($_COOKIE['ckPower'], $soloAdmis) &&  $rowCuot['idTipoPrestamo']=='79' && $rowCr['presFechaDesembolso']<>'Desembolso pendiente' && $k>=1):
 					$diasDebe2=$fechaHoy ->diff($fechaCu);
 						if( floatval($diasDebe2->format('%R%a')) < 0 ){
@@ -331,20 +343,19 @@ $fechaHoy = new DateTime();
 						</div>
 						<label class="orange-text text-darken-1 hidden" id="labelFaltaCombos" for=""><i class="icofont-warning"></i> Todas las casillas tienen que estar rellenadas para proceder</label>
 					</div>
-					
 				</div>
+			
 			</div>
 			<div class="panel panel-default">
 			<div class="panel-body">
 				<p><strong>Resultados:</strong></p>
 				<div class="container row" id="divVariables">
 				</div>
-				<table class="table">
-				<thead id="theadResultados">
-				
+				<table class="table table-hover" id="tableSimulacion">
+				<!-- <thead id="theadResultados">
 				</thead>
-					<tbody id="tbodyResultados"></tbody>
-				</table>
+				<tbody id="tbodyResultados"></tbody>-->
+				</table> 
 				</div>
 			</div>
 		
@@ -360,8 +371,10 @@ $fechaHoy = new DateTime();
 			</div>
 		</div>
 </div>
+</div></div>
 <!-- /#page-content-wrapper -->
 </div><!-- /#wrapper -->
+    
 
 <!-- Modal para mostrar los clientes coincidentes -->
 <div class="modal fade" id="mostrarResultadosClientes" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
@@ -417,7 +430,7 @@ $fechaHoy = new DateTime();
 			<div class="divError text-left animated fadeIn hidden" style="margin-bottom: 20px;"><i class="icofont-cat-alt-2"></i> Lo sentimos, <span class="spanError">La cantidad de ingresada no puede ser cero o negativo.</span></div>
 			<button class="btn btn-infocat btn-outline" id="btnRealizarDeposito"><i class="icofont-ui-rate-add"></i> Realizar depósito</button>
 		</div>
-	</div>
+	
 	</div>
 </div>
 <?php endif; ?>
@@ -514,7 +527,7 @@ $('#tbodySocios').on('click','.btnRemoveCanasta',function() {
 	$(this).parent().parent().remove();
 	//console.log( $(this).parent().parent().html() );
 });
-$('#tableSubIds tr').last().find('td').eq(5).text('0.00')
+$('#tableSubIds tr').last().find('td').eq(5).text('0.00');
 
 
 }); //Fin de Document ready
@@ -532,31 +545,31 @@ $('#btnSimularPagos').click(function() {
 		tasaInt: $('#txtInteres').val(),
 		fDesembolso: moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
 		primerPago: moment($('#dtpFechaPrimerv3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD')
-		}}).done(function(resp) {// console.log(resp)
-		$('#tbodyResultados').html(resp);
-		$('#tbodyResultados td').last().text('0.00');
+		}}).done(function(resp) { //console.log(resp)
+		$('#tableSimulacion').html(resp);
+	//	$('#tbodyResultados td').last().text('0.00');
 	});
 	$('#divVariables').children().remove();
-	switch ($('#sltTipoPrestamo').val()) {
+	/* switch ($('#sltTipoPrestamo').val()) {
 		
 		case "1":
 			// $('#divVariables').append(`<p><strong>TED:</strong> <span>0.66%</span></p>`);
 			$('#theadResultados').html(`	<th>#</th>
 					<th>Fecha</th>
-					<th>Cuota</th>
+					<th>Capital</th>
 					<th>Interés</th>
 					<th class="hidden">Amortización</th>
-					<th>Saldo</th>
+					<th>Cuota</th>
 					<th class="hidden">Saldo Real</th>`);
 			break;
 		case "2":
 			// $('#divVariables').append(`<p><strong>TES:</strong> <span>1.52%</span></p>`);
 			$('#theadResultados').html(`	<th>#</th>
 					<th>Fecha</th>
-					<th>Cuota</th>
+					<th>Capital</th>
 					<th>Interés</th>
 					<th class="hidden">Amortización</th>
-					<th>Saldo</th>
+					<th>Cuota</th>
 					<th class="hidden">Saldo Real</th>`);
 			break;
 		case "4":
@@ -564,10 +577,10 @@ $('#btnSimularPagos').click(function() {
 			// $('#divVariables').append(`<p><strong>TEQ:</strong> <span>2.95%</span></p>`);
 			$('#theadResultados').html(`	<th>#</th>
 					<th>Fecha</th>
-					<th>Cuota</th>
+					<th>Capital</th>
 					<th>Interés</th>
 					<th class="hidden">Amortización</th>
-					<th>Saldo</th>
+					<th>Cuota</th>
 					<th class="hidden">Saldo Real</th>`);
 			break;
 		case "99":
@@ -587,7 +600,7 @@ $('#btnSimularPagos').click(function() {
 			break;
 		default:
 			break;
-	}
+	} */
 	} //fin de else
 });
 $('#txtSoloBuscaCreditos').keypress(function (e) { 
@@ -711,14 +724,14 @@ $('#btnDenyVerificarCredito').click(function() {
 	$('#modalDenegarCredito').modal('show');
 });
 $('#btnVerificarCredito').click(function() {
-	$.ajax({url: 'php/updateVerificarCredito.php', type: 'POST', data: { credit: '<?= $codCredito; ?>' }}).done(function(resp) { console.log(resp)
+	$.ajax({url: 'php/updateVerificarCredito.php', type: 'POST', data: { credit: '<?= $codCredito; ?>' }}).done(function(resp) { //console.log(resp)
 		if(resp==1){
 			location.reload();
 		}
 	});
 });
 $('#btnDenegarCredito').click(function() {
-	$.ajax({url: 'php/updateDenegarCredito.php', type: 'POST', data: { credit: '<?= $codCredito; ?>', razon: $('#txtDenegarRazon').val() }}).done(function(resp) { console.log(resp)
+	$.ajax({url: 'php/updateDenegarCredito.php', type: 'POST', data: { credit: '<?= $codCredito; ?>', razon: $('#txtDenegarRazon').val() }}).done(function(resp) { //console.log(resp)
 		if(resp==1){
 			location.reload();
 		}

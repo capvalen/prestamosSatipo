@@ -1,3 +1,15 @@
+<thead>
+	<tr>
+		<th>#</th>
+					<th>Fecha</th>
+					<th>Capital</th>
+					<th>Interés</th>
+					<th class="hidden">Amortización</th>
+					<th>Cuota</th>
+					<th class="hidden">Saldo Real</th>
+	</tr>
+</thead>
+<tbody>
 <?php
 header('Content-Type: text/html; charset=utf8');
 date_default_timezone_set('America/Lima');
@@ -27,7 +39,7 @@ $plazo = $_POST['periodo'];
 $saldo = $_POST['monto'];
 $saltoDia = new DateInterval('P1D'); //aumenta 1 día
 $interes = 1+$_POST['tasaInt']/100;
-$intGanado=$monto*($interes-1);
+
 
 //Para saber si es sábado(6) o domingo(0):  format('w') 
 
@@ -63,7 +75,9 @@ switch ($_POST['modo']){
 	break;
 }
 
+$capitalPartido = round($monto/$plazo,1, PHP_ROUND_HALF_UP);
 $cuota = round(($monto*$interes)/$plazo,1, PHP_ROUND_HALF_UP);
+$intGanado = round($monto *$_POST['tasaInt']/100/$plazo,1, PHP_ROUND_HALF_UP);
 
 /* ?> 
 <tr><td class='grey-text text-darken-2'><strong>0</strong></td> <td><?= $fecha->format('d/m/Y'); ?></td> <td>-</td><td>-</td> <td>-</td> <td><?= number_format($saldo,2);?></td></tr><?php */
@@ -143,7 +157,7 @@ for ($j=0; $j <  count($jsonSimple) ; $j++) { ?><tr><?php
 	$nueva= new DateTime ($jsonSimple[$j]['fPago']);
 
 	if($jsonSimple[$j]['razon']==='Desembolso'){
-		?> <td class='grey-text text-darken-2'>-</td> <td class='grey-text text-darken-2'><?= $nueva->format('d/m/Y'); ?></td> <td class='grey-text text-darken-2'>Desembolso</td> <td></td> <td><?= number_format($jsonSimple[$j]['saldoReal'],2);?></td>
+		?> <td class='grey-text text-darken-2'>-</td> <td class='grey-text text-darken-2'><?= $nueva->format('d/m/Y'); ?></td> <td class='grey-text text-darken-2'>Desembolso</td> <td></td> <td><? //number_format($jsonSimple[$j]['saldoReal'],2);?></td>
 		<?php
 	}else if($jsonSimple[$j]['razon']==='Domingo'){ $dia++;
 		?> <td class='grey-text text-darken-2'>-</td> <td class='grey-text text-darken-2'><?= $nueva->format('d/m/Y'); ?></td> <td class='grey-text text-darken-2'>Domingo</td> <td></td> <td></td> 
@@ -156,11 +170,17 @@ for ($j=0; $j <  count($jsonSimple) ; $j++) { ?><tr><?php
 			$jsonSimple[$j]['saldoReal'] = $jsonSimple[$j-$dia]['saldoReal']-$jsonSimple[$j]['cuota']; $dia=1;
 		}
 
-		?><td class='grey-text text-darken-2'><strong><?= $jsonSimple[$j]['numDia']; ?></strong></td> <td class='grey-text text-darken-2'><?= $nueva->format('d/m/Y'); ?></td> <td class='grey-text text-darken-2'>S/ <?= number_format($jsonSimple[$j]['cuota'], 2); ?></td> <td class='grey-text text-darken-2'><?= number_format($intGanado,2)." (".$_POST['tasaInt']."%)"; ?></td> <td class='grey-text text-darken-2 hidden'><?= number_format($jsonSimple[$j]['amortizacion'],2); ?></td> <td class='grey-text text-darken-2 hidden'><?= number_format($jsonSimple[$j]['saldo'], 2);?></td> <td><?= number_format($jsonSimple[$j]['saldoReal'], 2);?></td> <?php
+		?><td class='grey-text text-darken-2'><strong><?= $jsonSimple[$j]['numDia']; ?></strong></td>
+		<td class='grey-text text-darken-2'><?= $nueva->format('d/m/Y'); ?></td>
+		<td class='grey-text text-darken-2'><?= "S/ ".number_format($capitalPartido, 2); //$jsonSimple[$j]['cuota'] ?></td> 
+		<td class='grey-text text-darken-2'><?= "S/ ". number_format($intGanado,2); ?></td> 
+		<td class='grey-text text-darken-2 hidden'><?= number_format($jsonSimple[$j]['amortizacion'],2); ?></td> 
+		<td class='grey-text text-darken-2 hidden'><?= number_format($jsonSimple[$j]['saldo'], 2);?></td> 
+		<td><?= "S/ ".number_format($jsonSimple[$j]['cuota'], 2);?></td> <?php
 	}
-?></tr><?php
+?></tr>
+<?php
 }
-	
 
 
 function esFeriado($feriados, $dia){
@@ -173,3 +193,13 @@ function esFeriado($feriados, $dia){
 }
 
 ?>
+</tbody>
+<tfoot>
+<tr>
+	<td></td>
+	<td><strong>Total:</strong></td>
+	<td><strong>S/ <?= $monto;?></strong></td>
+	<td><strong>S/ <?= number_format($monto*$_POST['tasaInt']/100,2); ?></strong></td>
+	<td><strong>S/ <?= number_format($monto*$interes,2);?></strong></td>
+</tr>
+</tfoot>
