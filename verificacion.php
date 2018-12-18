@@ -114,7 +114,7 @@ $base58 = new StephenHill\Base58();
 			<?php
 				$sqlMis="SELECT pre.idPrestamo, presMontoDesembolso, presFechaAutom,
 				case presFechaDesembolso when '0000-00-00 00:00:00' then 'Desembolso pendiente' else presFechaDesembolso end as `presFechaDesembolso`,
-				concat (c.cliApellidoPaterno, ' ', c.cliApellidoMaterno, ', ', c.cliNombres) as cliNombres, i.idCliente,
+				lower(concat (c.cliApellidoPaterno, ' ', c.cliApellidoMaterno, ', ', c.cliNombres)) as cliNombres, i.idCliente,
 				case presAprobado when 0 then 'Sin aprobar' when 2 then 'Rechazado' else 'Aprobado' end as `presAprobado`
 				FROM `prestamo` pre
 				inner join involucrados i on i.idPrestamo= pre.idPrestamo
@@ -126,7 +126,7 @@ $base58 = new StephenHill\Base58();
 					<tr>
 						<td><a href="creditos.php?credito=<?= $base58->encode($rowMis['idPrestamo']);?>">CR-<?= $rowMis['idPrestamo']; ?></a></td>
 						<td><?= $rowMis['presAprobado']; ?></td>
-						<td><?= $rowMis['cliNombres']; ?></td>
+						<td class="mayuscula"><?= $rowMis['cliNombres']; ?></td>
 						<td><?= $rowMis['presFechaDesembolso']; ?></td>
 						<td><?= $rowMis['presMontoDesembolso']; ?></td>
 					</tr>

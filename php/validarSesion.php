@@ -32,6 +32,8 @@ if ($row['idUsuario']>=1){
 	setcookie('ckdireccionEmpresa', $fila[2]['datoValor'], $expira, '/');
 	setcookie('cktelefonoEmpresa', $fila[3]['datoValor'], $expira, '/');
 	setcookie('cksucursalEmpresa', $fila[4]['datoValor'], $expira, '/');
+	setcookie('ckLemaEmpresa', $fila[7]['datoValor'], $expira, '/');
+	setcookie('ckcelularEmpresa', $fila[8]['datoValor'], $expira, '/');
 
 	echo $row['idUsuario'];
 }

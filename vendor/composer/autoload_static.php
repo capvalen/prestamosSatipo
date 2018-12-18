@@ -12,6 +12,10 @@ class ComposerStaticInit9ca6b0da783afa875880f91630f21d2f
             'StephenHill\\Benchmarks\\' => 23,
             'StephenHill\\' => 12,
         ),
+        'M' => 
+        array (
+            'Mike42\\' => 7,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -22,6 +26,10 @@ class ComposerStaticInit9ca6b0da783afa875880f91630f21d2f
         'StephenHill\\' => 
         array (
             0 => __DIR__ . '/..' . '/stephenhill/base58/src',
+        ),
+        'Mike42\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mike42/escpos-php/src/Mike42',
         ),
     );
 

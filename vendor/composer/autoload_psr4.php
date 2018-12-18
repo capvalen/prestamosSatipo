@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'StephenHill\\Benchmarks\\' => array($vendorDir . '/stephenhill/base58/benchmarks'),
     'StephenHill\\' => array($vendorDir . '/stephenhill/base58/src'),
+    'Mike42\\' => array($vendorDir . '/mike42/escpos-php/src/Mike42'),
 );

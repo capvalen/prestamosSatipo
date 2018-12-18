@@ -1,5 +1,6 @@
 {
     "require": {
-        "stephenhill/base58": "~1.0"
+        "stephenhill/base58": "~1.0",
+        "mike42/escpos-php": "^2.0"
     }
 }
