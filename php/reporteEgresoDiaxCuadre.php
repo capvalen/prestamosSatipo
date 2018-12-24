@@ -1,5 +1,8 @@
-<?php 
+<?
 require("conkarl.php");
+require_once('vendor/autoload.php');
+$base58 = new StephenHill\Base58();
+
 //echo "call reporteEgresoDiaxCuadre('".$_GET['cuadre']."');";
 $sql = mysqli_query($conection,"call reporteEgresoDiaxCuadre('".$_GET['cuadre']."');");
 $totalRow= mysqli_num_rows($sql);
@@ -15,10 +18,13 @@ if($totalRow==0){
 	{
 		$i++;
 		$sumaIngr+=floatval($row['pagoMonto']);
+		if($row['idPrestamo']<>0){$codTemp= $base58->encode('00'.$row['idPrestamo']);}
 
 		if($_COOKIE['ckPower']==1 || $_COOKIE['ckPower']==8): $boton = "<button class='btn btn-sm btn-negro btn-outline btnEditarCajaMaestra'><i class='icofont icofont-edit'></i></button>"; else: $boton=''; endif;?>
 
-		<tr data-id="<?= $row['idCaja']; ?>" data-activo="<?= $row['cajaActivo']; ?>"> <th scope='row'><a href='#'>#</a> </th> <td class='mayuscula tpIdDescripcion'><?= $row['tipoDescripcion'];?></td> <td><i class="icofont icofont-bubble-right"></i> <em><?= $row['usuNick'];?></em></td> <td>S/ <span class='spanCantv3'><?= $row['pagoMonto'];?></span></td>  <td class='mayuscula tdMoneda' data-id="<?= $row['cajaMoneda'];?>"><?= $row['moneDescripcion'];?></td> <td class='mayuscula tdObservacion'><?= $row['cajaObservacion'];?></td> <td><span class="sr-only fechaPagov3"><?= $row['cajaFecha'];  ?></span> <?= $boton;?></td> </tr>
+		<tr data-id="<?= $row['idCaja']; ?>" data-activo="<?= $row['cajaActivo']; ?>">
+			<th scope='row'><a href="<? if($row['idPrestamo']<>0){ echo 'creditos.php?credito='.$codTemp;}?>"><? if($row['idPrestamo']<>0){ echo 'CR-0'.$row['idPrestamo'];}?></a> </th>
+			<td class='mayuscula tpIdDescripcion'><?= $row['tipoDescripcion'];?></td> <td><i class="icofont icofont-bubble-right"></i> <em><?= $row['usuNick'];?></em></td> <td>S/ <span class='spanCantv3'><?= $row['pagoMonto'];?></span></td>  <td class='mayuscula tdMoneda' data-id="<?= $row['cajaMoneda'];?>"><?= $row['moneDescripcion'];?></td> <td class='mayuscula tdObservacion'><?= $row['cajaObservacion'];?></td> <td><span class="sr-only fechaPagov3"><?= $row['cajaFecha'];  ?></span> <?= $boton;?></td> </tr>
 		<?php 
 		if($totalRow==$i){
 			echo '<tr> <th scope="row"  style="border-top: transparent;"></th>  <td style="border-top: transparent;"></td> <td style="border-top: transparent;"></td> <td class="text-center" style="border-top: 1px solid #989898; color: #636363"><strong >Total</strong></td> <td style="border-top: 1px solid #989898; color: #636363"><strong >S/ <span id="strSumaSalida">'.number_format(round($sumaIngr,1,PHP_ROUND_HALF_UP),2, ',', '').'</span></strong></td><tr>';

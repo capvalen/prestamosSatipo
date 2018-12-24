@@ -419,7 +419,7 @@ $fechaHoy = new DateTime();
 			</table>
 		</div>
 	</div>
-	</div>
+</div>
 </div>
 
 <?php if(isset($_GET['credito']) && $rowCr['presAprobado']<> 'Sin aprobar' && $rowCr['presAprobado']<> "Rechazado" && $rowCr['presFechaDesembolso']<>'Desembolso pendiente' && in_array($_COOKIE['ckPower'], $soloAdmis)): ?>
@@ -453,10 +453,11 @@ $fechaHoy = new DateTime();
 		</div>
 		<div class="modal-footer">
 			<div class="divError text-left animated fadeIn hidden" style="margin-bottom: 20px;"><i class="icofont-cat-alt-2"></i> Lo sentimos, <span class="spanError">La cantidad de ingresada no puede ser cero o negativo.</span></div>
-			<button class="btn btn-infocat btn-outline" id="btnRealizarDeposito"><i class="icofont-ui-rate-add"></i> Realizar depósito</button>
+			<button class="btn btn-infocat btn-outline" id="btnRealizarDeposito" data-dismiss="modal"><i class="icofont-ui-rate-add"></i> Realizar depósito</button>
 		</div>
 	
 	</div>
+</div>
 </div>
 <?php endif; ?>
 
@@ -858,10 +859,22 @@ $('#btnRealizarDeposito').click(function() {
 		$('#mostrarRealizarPagoCombo .divError').removeClass('hidden').find('.spanError').html('Debe adeltar y cubrir mínimo la mora <strong>S/ '+$('#spaCPrecioMora').text()+'</strong> .');
 	}else{
 		$.ajax({url: 'php/pagarCreditoCombo.php', type: 'POST', data: {credito: '<?php if(isset ($_GET['credito'])){echo $_GET['credito'];}else{echo '';}; ?>', dinero: $('#txtPagaClienteVariable').val(), exonerar: $('#chkExonerar').prop('checked') }}).done(function(resp) {
-			console.log(resp)
-			if(resp==true){
-				location.reload();
+			var data = JSON.parse(resp); console.log(resp)
+			if( data.length >0 ){
+				if(data[0].diasMora>0){
+					$('#tituloPeque2').text('Items cancelados');
+					$('#h1Bien2').append(`<span  data-quees='${data[0].queEs}' data-monto='${data[0].montoCuota}' data-id='0'>Mora: S/ `+ parseFloat(data[0].sumaMora).toFixed(2) +`</span><br>`);
+					for(i=1; i<data.length; i++){$('#h1Bien2').append(`<span data-quees='${data[i].queEs}' data-monto='${data[i].montoCuota}' data-id='${data[i].cuota}'>SP-`+ data[i].cuota +`: S/ `+ parseFloat(data[i].montoCuota).toFixed(2) +`</span><br>`);}
+				}else{
+					for(i=0; i<data.length; i++){$('#h1Bien2').append(`<span data-quees='${data[i].queEs}' data-monto='${data[i].montoCuota}' data-id='${data[i].cuota}'>SP-`+ data[i].cuota +`: S/ `+ parseFloat(data[i].montoCuota).toFixed(2) +`</span><br>`);}
+				}
+				$('#modalGuardadoCorrecto2').modal('show');
+				
 			}
+			// if(resp==true){
+			// 	location.reload();
+			// }
+
 		});
 	}
 });

@@ -1,4 +1,4 @@
-<!-- Modal para decir que hubo un error  -->
+<!-- Modal para decir que el pago es correcto  -->
 <div class="modal fade" id="modalGuardadoCorrecto" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 <div class="modal-dialog modal-sm" role="document">
 	<div class="modal-content">
@@ -10,13 +10,13 @@
 			<div class="container-fluid">
 			<div class="row">
 			<img src="images/path4585.png?ver=1.1" class="img-responsive" alt=""><br>
-			<p class="text-center blue-text text-darken-1"><em>Información guardada</em></p>
+			<p class="text-center blue-text text-darken-1" id="tituloPeque"><em>Información guardada</em></p>
 			<p class="text-center blue-text text-darken-1"><span id="spanBien"></span><h1 class="text-center blue-text text-darken-1" id="h1Bien"></h1></p>
 			</div>
 		</div>
 			
 		<div class="modal-footer">
-			<button class="btn btn-primary btn-outline" data-dismiss="modal" ><i class="icofont icofont-social-smugmug"></i> Bien</button>
+			<button class="btn btn-primary btn-outline" data-dismiss="modal" ><i class="icofont-smugmug"></i> Bien</button>
 		</div>
 	</div>
 	</div>
@@ -41,6 +41,31 @@
 			
 		<div class="modal-footer">
 			<button class="btn btn-danger btn-outline" data-dismiss="modal" ><i class="icofont icofont-warning-alt"></i> Ok</button>
+		</div>
+	</div>
+	</div>
+</div>
+</div>
+
+<!-- Modal para decir que el pago es correcto #2  -->
+<div class="modal fade" id="modalGuardadoCorrecto2" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal-dialog modal-sm" role="document">
+	<div class="modal-content">
+		<div class="modal-header-primary">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"><i class="icofont icofont-social-readernaut"></i> Datos guardados</h4>
+		</div>
+		<div class="modal-body">
+			<div class="container-fluid">
+			<div class="row">
+			<img src="images/path4585.png?ver=1.1" class="img-responsive" alt=""><br>
+			<p class="text-center blue-text text-darken-1" id="tituloPeque2"><em>Información guardada</em></p>
+			<p class="text-center blue-text text-darken-1"><span id="spanBien2"></span><h3 class="text-center blue-text text-darken-1" id="h1Bien2"></h3></p>
+			</div>
+		</div>
+			
+		<div class="modal-footer">
+			<button class="btn btn-primary btn-outline" id="btnPrintTicketPagoGlo" data-dismiss="modal"><i class="icofont-paper"></i> Imprimir ticket</button>
 		</div>
 	</div>
 	</div>

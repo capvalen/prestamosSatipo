@@ -16,7 +16,7 @@ if(isset($_GET['cuadre'])){
 	$sql = mysqli_query($conection,"call cajaActivaHoy('".$_GET['fecha']."');"); // $_GET['fecha']
 }
 $row = mysqli_fetch_array($sql, MYSQLI_ASSOC);
-if($hayCaja==true){
+if($hayCaja>0){
 	
 	?>
 	<div class="container-fluid row ">

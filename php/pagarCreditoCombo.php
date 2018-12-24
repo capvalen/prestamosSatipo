@@ -11,7 +11,7 @@ $diasMora=0; $moraTotal=0;
 $dinero= $_POST['dinero'];
 $idPrestamo = $base58->decode($_POST['credito']);
 $sql= "SELECT * FROM prestamo_cuotas
-where cuotFechaPago <=curdate() and idPrestamo = {$idPrestamo} and idTipoPrestamo in (33, 79)
+where cuotFechaPago <=curdate() and idPrestamo = {$idPrestamo} and idTipoPrestamo in (33, 79) and idTipoPrestamo <>43
 order by cuotFechaPago asc;";
 
 $resultado=$esclavo->query($sql);
@@ -54,7 +54,7 @@ else:
 	}
 endif;
 
-$filas[] = array('sumaMora' => $moraTotal, 'diasMora' => $diasMora );
+$filas[] = array('sumaMora' => $moraTotal, 'diasMora' => $diasMora, 'queEs'=> 'Pago mora' );
 
 
 
@@ -71,7 +71,7 @@ while($row2=$resultado->fetch_assoc()){
 			WHERE `idCuota` = {$row2['idCuota']};
 			INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 			VALUES (null,{$idPrestamo},{$row2['idCuota']},80,now(),{$debePendiente},'',1,1,{$_COOKIE['ckidUsuario']});";
-			$filas[] = array('cuota' => $row2['idCuota'], 'montoCuota' => $debePendiente );
+			$filas[] = array('cuota' => $row2['idCuota'], 'montoCuota' => $debePendiente, 'queEs'=> 'Cuota cancelada' );
 	}
 	else{
 		if( $dinero <= 0){
@@ -85,7 +85,7 @@ while($row2=$resultado->fetch_assoc()){
 			WHERE `idCuota` = {$row2['idCuota']};
 			INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 			VALUES (null,{$idPrestamo},{$row2['idCuota']},33,now(),{$dinero},'',1,1,{$_COOKIE['ckidUsuario']})";
-			$filas[] = array('cuota' => $row2['idCuota'], 'montoCuota' => $dinero );
+			$filas[] = array('cuota' => $row2['idCuota'], 'montoCuota' => $dinero, 'queEs'=> 'Adelanto cuota' );
 
 		}
 	}
