@@ -44,7 +44,7 @@ $fechaHoy = new DateTime();
 		<div class="row noselect">
 			<div class="col-lg-12 contenedorDeslizable ">
 			<!-- Empieza a meter contenido principal -->
-			<div class="panel panel-default">
+			<div class="panel panel-default hidden">
 			<div class="panel-body">
 				<div class="row col-sm-6 col-md-3">
 					<p><strong>Filtro de Créditos:</strong></p>
@@ -180,12 +180,18 @@ $fechaHoy = new DateTime();
 			where prc.idPrestamo = {$codCredito}
 			order by cuotFechaPago asc";
 			if($respCuot = $cadena->query($sqlCuot)){ $k=0;
+				$sumCapital = 0; $sumInteres =0; $sumCuota =0;
 				while($rowCuot = $respCuot->fetch_assoc()){
 					$monto = $rowCuot['presMontoDesembolso'];
 					$interes = $rowCuot['preInteresPers'];
 					$plazo = $rowCuot['presPeriodo'];
 					$capitalPartido = $monto/$plazo;
 					$intGanado = $monto*$interes/100/$plazo;
+					$cuotaGanado = $capitalPartido + $intGanado;
+					
+					if($k>=1) {$sumCapital = $sumCapital+$capitalPartido;
+					$sumInteres = $sumInteres+$intGanado;
+					$sumCuota = $sumCuota+$cuotaGanado;}
 
 					?>
 				<tr>
@@ -193,7 +199,7 @@ $fechaHoy = new DateTime();
 					<td><?php $fechaCu= new DateTime($rowCuot['cuotFechaPago']); echo $fechaCu->format('d/m/Y'); ?></td>
 					<td><? if($k>=1) {echo number_format($capitalPartido,2);} ?></td>
 					<td><? if($k>=1) {echo number_format($intGanado,2);} ?></td>
-					<td><? if($k>=1) {echo number_format($rowCuot['cuotCuota'],2);} ?></td>
+					<td><? if($k>=1) {echo number_format($cuotaGanado,2);} ?></td>
 					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'): echo "Desembolso"; elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; else: echo $rowCuot['cuotFechaCancelacion']; endif;  ?></td>
 					<td class="tdPagoCli" data-pago="<?= number_format($rowCuot['cuotPago'],2); ?>"><? if($k>=1) {echo number_format($rowCuot['cuotPago'],2);} ?></td>
 					<td class="hidden"><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
@@ -221,6 +227,16 @@ $fechaHoy = new DateTime();
 			<?php $k++; }
 			} ?>
 				</tbody>
+				<tfoot>
+					<tr>
+						<th></th> <th></th>
+						<th><?= number_format($sumCapital,2); ?></th>
+						<th><?= number_format($sumInteres,2); ?></th>
+						<th><?= number_format($sumCuota,2); ?></th>
+						<th></th> <th></th><th> </th>
+						
+					</tr>
+				</tfoot>
 			</table>
 			<div class="row">
 				<p class="purple-text text-lighten-1"><strong>Otros procesos</strong></p>
@@ -385,7 +401,7 @@ $fechaHoy = new DateTime();
 		<? endif; //fin de get Credito ?>
 		<? if( !isset($_GET['titular']) && !isset($_GET['credito']) && !isset($_GET['record']) ): ?>
 		<h3 class="purple-text text-lighten-1">Zona créditos</h3><hr>
-		
+		<p>Comience buscando un crédito en la parte superior.</p>
 		<? endif; ?>
 				
 			<!-- Fin de contenido principal -->

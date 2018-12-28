@@ -6,7 +6,7 @@ $nomArchivo = basename($_SERVER['PHP_SELF']); ?>
 			<img class="img-responsive" src="images/empresa.png?version=1.2" alt="">
 		</div>
 		<li <?php if($nomArchivo =='principal.php') echo 'class="active"'; ?>>
-				<a href="#!"><i class="icofont-home"></i> Inicio</a>
+				<a href="principal.php"><i class="icofont-home"></i> Inicio</a>
 		</li>
 		<li <?php if($nomArchivo =='clientes.php') echo 'class="active"'; ?>>
 				<a href="clientes.php"><i class="icofont-users"></i> Clientes</a>

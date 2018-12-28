@@ -40,13 +40,13 @@ $base58 = new StephenHill\Base58();?>
 			<!-- Empieza a meter contenido principal -->
 			<h2 class="purple-text text-lighten-1"><i class="icofont-users"></i> Zona clientes</h2><hr>
 			
-			<div class="form-inline">
+			<button class="btn btn-infocat btn-outline btnSinBorde" id="btnAddClientes"><i class="icofont-ui-add"></i> Nuevo cliente</button>
+			<div class="form-inline hidden">
 				<div class="form-group"><label for="" style='margin-top:-3px'>Filtro de clientes:</label> <input type="text" class='form-control' id="txtClientesZon" placeholder='Clientes' autocomplete="off" style="margin-bottom: 0px;">
 				<button class="btn btn-infocat btn-outline btnSinBorde" id="btnFiltrarClientes"><i class="icofont-search"></i></button>
-				<button class="btn btn-infocat btn-outline btnSinBorde" id="btnAddClientes"><i class="icofont-ui-add"></i> Nuevo cliente</button>
 
 			</div></div>
-			<?php if(!isset($_GET['idCliente'])){ ?>
+			<?php if( isset($_GET['buscar'])){ ?>
 			<div class="container-fluid row"><br>
 				<h4><?php if(isset($_GET['buscar'])){echo 'Resultado de la búsqueda';}else{ echo 'Últimos clientes registrados';} ?></h4>
 				<div class="table-responsive">

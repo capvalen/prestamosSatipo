@@ -116,24 +116,20 @@ $('#txtBuscarNivelGod').keypress(function (e) {
 		// Numero <=6 buscar por id producto
 		// Letra buscar nombre cliente o nombre producto
 
-		var campo = $(this).val();
-		if( $.isNumeric(campo) && campo.length<6){
-			window.location='productos.php?idProducto='+campo; 
+		var campo = $(this).val().toUpperCase();
+		if( campo.indexOf('CR-')!=-1 ){ //$.isNumeric(campo) && campo.length<6
+			$.post('php/58encode.php', {texto: campo.replace('CR-', '') }, function(resp) {
+				window.location.href = 'creditos.php?credito='+resp;
+			});
 		}else{ // es letras
 			if($('#txtBuscarNivelGod').val()!=''){
-			$.ajax({url: 'php/listarBuscarNombreProducto.php', type: 'POST', data: {texto: campo }}).done(function (resp) {
-			console.log(resp);
-			//dato = JSON.parse(resp); 
-			$('#rowProductoEncontrado').html(resp);
-			/*$.each(dato, function(i, elem){ //console.log(elem)
-				$('#rowProductoEncontrado').append(`<div class="row">
-					<div class="col-xs-5 mayuscula"><a href="productos.php?idProducto=${elem.idproducto}">${elem.prodnombre}</a></div>
-					<div class="col-xs-5 mayuscula eleNom"><a href="cliente.php?idCliente=${elem.idCliente}">${elem.cliapellidos}, ${elem.clinombres}</a></div>
-					<div class="col-xs-2">S/. ${parseFloat(elem.prodMontoEntregado).toFixed(2)}</div>
-					</div>`);
-			});*/
-			$('.modal-mostrarResultadosProducto').modal('show');
-			});
+				window.location.href = 'clientes.php?buscar='+campo;
+				// $.ajax({url: 'php/buscarClientesDniNombre.php', type: 'POST', data: {texto: campo }}).done(function (resp) {
+				// console.log(resp);
+				// //dato = JSON.parse(resp); 
+				// $('#rowProductoEncontrado').html(resp);
+				// $('.modal-mostrarResultadosProducto').modal('show');
+				// });
 			}
 		}
 	}
