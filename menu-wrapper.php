@@ -23,7 +23,7 @@ $nomArchivo = basename($_SERVER['PHP_SELF']); ?>
 		<li <?php if($nomArchivo =='reportes.php') echo 'class="active"'; ?>>
 				<a href="reportes.php"><i class="icofont-ui-copy"></i> Reportes</a>
 		</li>
-		<li <?php if($nomArchivo =='reportes.php') echo 'class="active"'; ?>>
+		<li <?php if($nomArchivo =='simulador.php') echo 'class="active"'; ?>>
 				<a href="simulador.php"><i class="icofont icofont-robot"></i> Simulador</a>
 		</li>
 		<?php if( $_COOKIE['ckPower']==1){ ?>

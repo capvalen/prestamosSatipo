@@ -73,7 +73,8 @@ $base58 = new StephenHill\Base58();?>
 					</tbody>
 					</table>
 				</div>
-				<?php }else{
+				<?php }
+				if( isset( $_GET['idCliente'] )){
 				$idCli= $base58->decode($_GET['idCliente']);
 				$sqlDato= "SELECT `idCliente`, `cliDni`, lower(`cliNombres`) as `cliNombres`, lower(`cliApellidoPaterno`) as `cliApellidoPaterno`, lower(`cliApellidoMaterno`) as `cliApellidoMaterno`, `cliSexo`, `cliNumHijos`, `cliDireccionesIgual`,
 				ca.calDescripcion, lower(a.addrDireccion) as addrDireccion, lower(a.addrReferencia) as addrReferencia, a.addrNumero,

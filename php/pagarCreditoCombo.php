@@ -34,9 +34,9 @@ while($row=$resultado->fetch_assoc()){
 } //fin de while
 
 $resultado->data_seek(0);
-echo $_POST['exonerar']===true;
+echo $_POST['exonerar']=='true';
 
-if( $_POST['exonerar']===true && $diasMora>0 ):
+if( $_POST['exonerar']=='true' && $diasMora>0 ):
 	$sqlMora="INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 	VALUES (null,{$idPrestamo},0,86,now(),0,'Se condonó {$diasMora} días por el periodo {$primFecha} y {$ultFecha}',1,1,{$_COOKIE['ckidUsuario']});";
 	echo $sqlMora;
@@ -61,6 +61,7 @@ $filas[] = array('sumaMora' => $moraTotal, 'diasMora' => $diasMora, 'queEs'=> 'P
 $sentenciaLarga ='';
 while($row2=$resultado->fetch_assoc()){
 	$debePendiente = $row2['cuotCuota']-$row2['cuotPago'];
+	//echo 'din '. $debePendiente . ' ';
 	if($dinero >= $debePendiente){
 		//echo 'Pagar el id: '.$row2['idCuota']." con total ".$debePendiente."\n";
 

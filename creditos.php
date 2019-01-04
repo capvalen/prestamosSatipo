@@ -871,10 +871,10 @@ $('#btnRealizarDeposito').click(function() {
 		$('#mostrarRealizarPagoCombo .divError').removeClass('hidden').find('.spanError').text('No se permiten valores negativos o ceros.');
 	}else if($('#txtPagaClienteVariable').val() > parseFloat($('#spaCTotal').text())  ){
 		$('#mostrarRealizarPagoCombo .divError').removeClass('hidden').find('.spanError').html('El monto máximo que se puede depositar es <strong>S/ '+$('#spaCTotal').text()+'</strong> .');
-	}else if( $('#txtPagaClienteVariable').val() < $('#spaCPrecioMora').text() ){
+	}else if( $('#txtPagaClienteVariable').val() < parseFloat($('#spaCPrecioMora').text()) ){
 		$('#mostrarRealizarPagoCombo .divError').removeClass('hidden').find('.spanError').html('Debe adeltar y cubrir mínimo la mora <strong>S/ '+$('#spaCPrecioMora').text()+'</strong> .');
 	}else{
-		$.ajax({url: 'php/pagarCreditoCombo.php', type: 'POST', data: {credito: '<?php if(isset ($_GET['credito'])){echo $_GET['credito'];}else{echo '';}; ?>', dinero: $('#txtPagaClienteVariable').val(), exonerar: $('#chkExonerar').prop('checked') }}).done(function(resp) {
+		$.ajax({url: 'php/pagarCreditoCombo.php', type: 'POST', data: {credito: '<?php if(isset ($_GET['credito'])){echo $_GET['credito'];}else{echo '';}; ?>', dinero: $('#txtPagaClienteVariable').val(), exonerar: $('#chkExonerar').prop('checked') }}).done(function(resp) { console.log( resp );
 			var data = JSON.parse(resp); console.log(resp)
 			if( data.length >0 ){
 				if(data[0].diasMora>0){
