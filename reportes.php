@@ -43,7 +43,8 @@ include "php/variablesGlobales.php";
 			<div class="row">
 				<div class="col-xs-6 col-md-3">
 					<select name="" class="form-control" id="sltFiltroReporte">
-						<option value="R1" class="optReporte">Resumen de movimientos</option>
+						<option value="R1" class="optReporte">Movimientos de entrada</option>
+						<option value="R2" class="optReporte">Movimientos de Salida</option>
 					
 					</select>
 				</div>
