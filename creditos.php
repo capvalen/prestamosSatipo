@@ -132,7 +132,7 @@ $fechaHoy = new DateTime();
 				<button class="btn btn-danger btn-outline btn-lg" id="btnDenyVerificarCredito"><i class="icofont-thumbs-down"></i> Denegar crédito</button>
 			<?php endif; ?>
 
-			<?php	if(isset($_GET['credito']) && $rowCr['presAprobado']<> 'Sin aprobar' && $rowCr['presAprobado']<> "Rechazado" && in_array($_COOKIE['ckPower'], $soloAdmis)): ?>
+			<?php if(isset($_GET['credito']) && $rowCr['presAprobado']<> 'Sin aprobar' && $rowCr['presAprobado']<> "Rechazado" && in_array($_COOKIE['ckPower'], $soloAdmis)): ?>
 			<?php if( $hayCaja==true ):
 				if($rowCr['presFechaDesembolso']=='Desembolso pendiente'): ?>
 				<button class="btn btn-warning btn-outline btn-lg" id="btnDesembolsar"><i class="icofont-money"></i> Desembolsar</button>
@@ -867,6 +867,8 @@ $('#btnsolicitarDeuda').click(function() {
 	});
 });
 $('#btnRealizarDeposito').click(function() {
+	pantallaOver(true);
+	$('#h1Bien2').children().remove();
 	if( $('#txtPagaClienteVariable').val()<=0 ){
 		$('#mostrarRealizarPagoCombo .divError').removeClass('hidden').find('.spanError').text('No se permiten valores negativos o ceros.');
 	}else if($('#txtPagaClienteVariable').val() > parseFloat($('#spaCTotal').text())  ){
@@ -875,7 +877,7 @@ $('#btnRealizarDeposito').click(function() {
 		$('#mostrarRealizarPagoCombo .divError').removeClass('hidden').find('.spanError').html('Debe adeltar y cubrir mínimo la mora <strong>S/ '+$('#spaCPrecioMora').text()+'</strong> .');
 	}else{
 		$.ajax({url: 'php/pagarCreditoCombo.php', type: 'POST', data: {credito: '<?php if(isset ($_GET['credito'])){echo $_GET['credito'];}else{echo '';}; ?>', dinero: $('#txtPagaClienteVariable').val(), exonerar: $('#chkExonerar').prop('checked') }}).done(function(resp) { console.log( resp );
-			var data = JSON.parse(resp); console.log(resp)
+			var data = JSON.parse(resp); 
 			if( data.length >0 ){
 				if(data[0].diasMora>0){
 					$('#tituloPeque2').text('Items cancelados');
@@ -893,6 +895,7 @@ $('#btnRealizarDeposito').click(function() {
 
 		});
 	}
+	pantallaOver(false);
 });
 <?php } ?>
 </script>

@@ -34,12 +34,13 @@ while($row=$resultado->fetch_assoc()){
 } //fin de while
 
 $resultado->data_seek(0);
-echo $_POST['exonerar']=='true';
+//echo $_POST['exonerar']=='true';
 
 if( $_POST['exonerar']=='true' && $diasMora>0 ):
+   /* HACER INSERT a CAJA por MORA por sólo lo que el cliente diga */
 	$sqlMora="INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 	VALUES (null,{$idPrestamo},0,86,now(),0,'Se condonó {$diasMora} días por el periodo {$primFecha} y {$ultFecha}',1,1,{$_COOKIE['ckidUsuario']});";
-	echo $sqlMora;
+	//echo $sqlMora;
 	
 	$resultadoMora=$esclavo->query($sqlMora);
 else:

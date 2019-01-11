@@ -8,7 +8,7 @@ $sql="SELECT idCliente, lower(concat( cliApellidoPaterno, ' ' , cliApellidomater
 where cliDni = {$_POST['texto']};";
 $resultado=$cadena->query($sql);
 $filas = $resultado->num_rows;
-if($filas ==1 ){
+if($filas >=1 ){
   $row=$resultado->fetch_assoc();
   echo "<a class='mayuscula' href='clientes.php?idCliente=".$base58->encode($row['idCliente'])."'>".$row['cliNombres']."</a>";
 }else{
