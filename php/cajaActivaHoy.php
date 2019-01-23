@@ -50,7 +50,7 @@ if($hayCaja>0  ){
 	<div class="container-fluid row ">
 		<div class="col-xs-12 col-md-7">
 			<div class="alert alert-morado container-fluid" role="alert">
-				<div class="col-xs-4 col-sm-2 col-md-3">
+				<div class="col-xs-4 col-sm-2 ">
 					<img src="images/ghost.png" alt="img-responsive" width="100%">
 				</div>
 				<div class="col-xs-8">

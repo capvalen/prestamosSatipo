@@ -46,6 +46,11 @@ $base58 = new StephenHill\Base58();?>
 				<button class="btn btn-infocat btn-outline btnSinBorde" id="btnFiltrarClientes"><i class="icofont-search"></i></button>
 
 			</div></div>
+
+			<div class="listarTodosClientes">
+				<?php if(!isset($_GET['buscar']) && !isset($_GET['idCliente'])): include 'php/listarTodosClientes.php'; endif; ?>
+			</div>
+
 			<?php if( isset($_GET['buscar'])){ ?>
 			<div class="container-fluid row"><br>
 				<h4><?php if(isset($_GET['buscar'])){echo 'Resultado de la búsqueda';}else{ echo 'Últimos clientes registrados';} ?></h4>
@@ -212,6 +217,7 @@ $(document).ready(function(){
 	});
 });//fin de document ready
 $('#btnAddClientes').click(function() {
+	$('#txtDniCliente').val('');
 	$('#modalNewCliente').modal('show');
 });
 $('#chkDireccion').change(function() {
@@ -315,7 +321,7 @@ $('#sltEstadoCivil').on('changed.bs.select', function (e, clickedIndex, isSelect
 	cargarDataPosiblesParejas() 
 });
 function cargarDataPosiblesParejas() {
-	if( $('#sltEstadoCivil').val()==2 && $('#sltEstadoCivil').val()!='' ){
+	if( $.inArray($('#sltEstadoCivil').val(), ["2", "3"])!=-1 && $('#sltEstadoCivil').val()!='' ){
 		$('#divSoloCasado').removeClass('hidden');
 		var sexOpu = '';
 		if( $('#sltSexo').val()==0 ){

@@ -5,7 +5,8 @@ include 'conkarl.php';
 require_once('../vendor/autoload.php');
 $base58 = new StephenHill\Base58();
 
-$sql="INSERT INTO `prestamo`(`idPrestamo`, `presFechaAutom`, `presFechaDesembolso`, `presPeriodo`, `preInteresPers`,`presMontoDesembolso`, `idTipoPrestamo`, `presActivo`, `idUsuario`) VALUES (null, now(), {$_POST['fDesembolso']}, {$_POST['periodo']}, {$_POST['tasaInt']},{$_POST['monto']}, {$_POST['modo']}, 1, {$_COOKIE['ckidUsuario']});";
+$pagoTotal = $_POST['monto']*(1+$_POST['tasaInt']/100);
+$sql="INSERT INTO `prestamo`(`idPrestamo`, `presFechaAutom`, `presFechaDesembolso`, `presPeriodo`, `preInteresPers`,`presMontoDesembolso`, `idTipoPrestamo`, `presActivo`, `idUsuario`, `preSaldoDebe`) VALUES (null, now(), {$_POST['fDesembolso']}, {$_POST['periodo']}, {$_POST['tasaInt']},{$_POST['monto']}, {$_POST['modo']}, 1, {$_COOKIE['ckidUsuario']}, {$pagoTotal});";
 
 if($conection->query($sql)){
 	//$row = mysqli_fetch_array($log, MYSQLI_ASSOC);
@@ -61,7 +62,7 @@ switch ($_POST['modo']){
 		$intervalo = new DateInterval('P15D'); //aumenta 1 día
 		break;
 	case "3": //MENSUAL
-		$intervalo = new DateInterval('P30D'); //aumenta 1 día
+		$intervalo = new DateInterval('P1M'); //aumenta 1 día
 		break;
 	default:
 	break;
@@ -70,7 +71,11 @@ $cuota = round(($monto*$interes)/$plazo,1, PHP_ROUND_HALF_UP);
 
 
 $interesSumado=0;
-$fecha->add($intervalo);
+if( $_POST['modo']=='3'){
+	$fecha = new DateTime($_POST['primerPago']);
+}else{
+	$fecha->add($intervalo);
+}
 //$cuota = round($monto*$interes/$plazo,2);
 for ($i=0; $i < $plazo ; $i++) {
 

@@ -43,9 +43,10 @@ include "php/variablesGlobales.php";
 			<div class="row">
 				<div class="col-xs-6 col-md-3">
 					<select name="" class="form-control" id="sltFiltroReporte">
+						<option value="R3" class="optReporte">Créditos nuevos</option>
 						<option value="R1" class="optReporte">Movimientos de entrada</option>
 						<option value="R2" class="optReporte">Movimientos de Salida</option>
-					
+
 					</select>
 				</div>
 				<div class="col-xs-6 col-md-6">
@@ -61,7 +62,7 @@ include "php/variablesGlobales.php";
 					<button class="btn btn-success btn-outline" id="btnFiltrarReporte"><i class="icofont-search-1"></i> Filtrar reporte</button>
 				</div>
 			</div>
-			<div >
+			<div style="padding-top: 30px;">
 			<table class="table table-hover" id="resultadoReporte">
 			</table>
 			</div>
@@ -123,8 +124,8 @@ $('#inputFechaInicio').change(function () {
 $(document).ready(function(){
 
 });
-$('#btnFiltrarReporte').click(function() {
-	if( $('#sltFiltroReporte').val()!=-1 && moment($('#inputFechaInicio').val()).isValid() && moment($('#inputFechaFin').val()).isValid() ){
+$('#btnFiltrarReporte').click(function() { //console.log('a')
+	if( $('#sltFiltroReporte').val()!=-1 && moment($('#inputFechaInicio').val(), 'DD/MM/YYYY').isValid() && moment($('#inputFechaFin').val(), 'DD/MM/YYYY').isValid() ){
 		$.ajax({url: 'php/reporteXCaso.php', type: 'POST', data: { caso: $('#sltFiltroReporte').val(), fInicio :  moment($('#inputFechaInicio').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'), fFinal: moment($('#inputFechaFin').val(), 'DD/MM/YYYY').format('YYYY-MM-DD') }}).done(function(resp) {
 			console.log(resp);
 			$('#resultadoReporte').html(resp);

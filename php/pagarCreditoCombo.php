@@ -64,12 +64,13 @@ while($row2=$resultado->fetch_assoc()){
 	$debePendiente = $row2['cuotCuota']-$row2['cuotPago'];
 	//echo 'din '. $debePendiente . ' ';
 	if($dinero >= $debePendiente){
-		//echo 'Pagar el id: '.$row2['idCuota']." con total ".$debePendiente."\n";
+		//echo 'Pago completo delinterés;
 
 		$sentenciaLarga = $sentenciaLarga. "UPDATE `prestamo_cuotas` SET 
 			`cuotFechaCancelacion`= now(),
 			`cuotPago` = `cuotPago`+ {$debePendiente},
-			`idTipoPrestamo`=80
+			`idTipoPrestamo` = 80,
+			`preSaldoDebe` = `preSaldoDebe` - $debePendiente
 			WHERE `idCuota` = {$row2['idCuota']};
 			INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 			VALUES (null,{$idPrestamo},{$row2['idCuota']},80,now(),{$debePendiente},'',1,1,{$_COOKIE['ckidUsuario']});";
@@ -83,7 +84,8 @@ while($row2=$resultado->fetch_assoc()){
 			$sentenciaLarga = $sentenciaLarga. "UPDATE `prestamo_cuotas` SET 
 			`cuotFechaCancelacion`= now(),
 			`cuotPago` = `cuotPago`+ {$dinero},
-			`idTipoPrestamo`=33
+			`idTipoPrestamo` = 33,
+			`preSaldoDebe` = `preSaldoDebe` - $dinero
 			WHERE `idCuota` = {$row2['idCuota']};
 			INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 			VALUES (null,{$idPrestamo},{$row2['idCuota']},33,now(),{$dinero},'',1,1,{$_COOKIE['ckidUsuario']})";

@@ -68,7 +68,7 @@ switch ($_POST['modo']){
 		$intervalo = new DateInterval('P15D'); //aumenta 15 días
 		break;
 	case "3": //MENSUAL
-		$intervalo = new DateInterval('P30D'); //aumenta 30 día
+		$intervalo = new DateInterval('P1M'); //aumenta 30 día
 		break;
 	default:
 	?> <tr><td>Datos inválidos</td></tr><?php
@@ -83,7 +83,11 @@ $intGanado = round($monto *$_POST['tasaInt']/100/$plazo,1, PHP_ROUND_HALF_UP);
 <tr><td class='grey-text text-darken-2'><strong>0</strong></td> <td><?= $fecha->format('d/m/Y'); ?></td> <td>-</td><td>-</td> <td>-</td> <td><?= number_format($saldo,2);?></td></tr><?php */
 
 $interesSumado=0;
-$fecha->add($intervalo);
+if( $_POST['modo']=='3'){
+	$fecha = new DateTime($_POST['primerPago']);
+}else{
+	$fecha->add($intervalo);
+}
 //$cuota = round($monto*$interes/$plazo,2);
 for ($i=0; $i < $plazo ; $i++) {
 /* 	?> <tr><?php */

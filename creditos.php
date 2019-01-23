@@ -126,11 +126,13 @@ $fechaHoy = new DateTime();
 			<hr>
 
 			<div class="container row" id="rowBotonesMaestros">
-				<button class="btn btn-negro btn-outline btn-lg " id="btnImpresionPrevia" data-pre="<?= $_GET['credito'];?>"><i class="icofont-print"></i> Imprimir cronograma</button>
-			<?php if(isset($_GET['credito']) && $rowCr['presAprobado']== 'Sin aprobar'): ?>
-				<button class="btn btn-success btn-outline btn-lg" id="btnShowVerificarCredito"><i class="icofont-check-circled"></i> Aprobar crédito</button>
-				<button class="btn btn-danger btn-outline btn-lg" id="btnDenyVerificarCredito"><i class="icofont-thumbs-down"></i> Denegar crédito</button>
-			<?php endif; ?>
+				<div class="col-xs-12 col-md-6">
+					<button class="btn btn-negro btn-outline btn-lg " id="btnImpresionPrevia" data-pre="<?= $_GET['credito'];?>"><i class="icofont-print"></i> Imprimir cronograma</button>
+				<?php if(isset($_GET['credito']) && $rowCr['presAprobado']== 'Sin aprobar'): ?>
+					<button class="btn btn-success btn-outline btn-lg" id="btnShowVerificarCredito"><i class="icofont-check-circled"></i> Aprobar crédito</button>
+					<button class="btn btn-danger btn-outline btn-lg" id="btnDenyVerificarCredito"><i class="icofont-thumbs-down"></i> Denegar crédito</button>
+				<?php endif; ?>
+				</div>
 
 			<?php if(isset($_GET['credito']) && $rowCr['presAprobado']<> 'Sin aprobar' && $rowCr['presAprobado']<> "Rechazado" && in_array($_COOKIE['ckPower'], $soloAdmis)): ?>
 			<?php if( $hayCaja==true ):
@@ -140,14 +142,14 @@ $fechaHoy = new DateTime();
 				<button class="btn btn-infocat btn-outline btn-lg" id="btnsolicitarDeuda"><i class="icofont-money"></i> Pago global</button>
 			<?php endif; ?>
 			<?php else: ?> 
-				<div class="col-xs-12 col-md-7"><br>
+				<div class="col-xs-12 col-md-6"><br>
 					<div class="alert alert-morado container-fluid" role="alert">
 						<div class="col-xs-4 col-sm-2 col-md-3">
 							<img src="images/ghost.png" alt="img-responsive" width="100%">
 						</div>
 						<div class="col-xs-8">
 							<strong>Alerta</strong> <p>No se encuentra ninguna caja aperturada.</p>
-							<a class="btn btn-default btn-lg btn-outline pull-left" href="caja.php" style="color:#333"><i class="icofont icofont-rounded-double-right"></i> Ir a caja</a>
+							<a class="btn btn-dark btn-outline btn-xs pull-left" href="caja.php" style="color:#333"><i class="icofont icofont-rounded-double-right"></i> Ir a caja</a>
 						</div>
 					</div>
 				</div>
@@ -238,24 +240,9 @@ $fechaHoy = new DateTime();
 					</tr>
 				</tfoot>
 			</table>
-			<div class="row">
-				<p class="purple-text text-lighten-1"><strong>Otros procesos</strong></p>
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th>N°</th>
-							<th>Proceso</th>
-							<th>Monto</th>
-							<th>Observaciones</th>
-							<th>Responsable</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php $_POST['credito']=$_GET['credito']; include 'php/listarOtrospagos.php'; ?>
-					</tbody>
-				</table>
-			</div>
 
+			<?php $_POST['credito']=$_GET['credito']; include 'php/listarOtrospagos.php'; ?>
+			
 		</div><!-- Fin de contenedorCreditosFluid -->
 			
 
@@ -401,7 +388,21 @@ $fechaHoy = new DateTime();
 		<? endif; //fin de get Credito ?>
 		<? if( !isset($_GET['titular']) && !isset($_GET['credito']) && !isset($_GET['record']) ): ?>
 		<h3 class="purple-text text-lighten-1">Zona créditos</h3><hr>
-		<p>Comience buscando un crédito en la parte superior.</p>
+		<p>Comience buscando un crédito en la parte superior o seleccione uno de todos los créditos activos:</p>
+			<table class="table table-hover" id="tableCreditosTodos">
+			<thead>
+				<tr>
+					<th>Crédito</th>
+					<th>Cliente</th>
+					<th>Tipo</th>
+					<th>Monto</th>
+					<th>Periodo</th>
+					<th>Interés</th>
+					<th>Desembolso</th>
+				</tr>
+			</thead>
+				<? include 'php/listarTodosPrestamos.php';?>
+			</table>
 		<? endif; ?>
 				
 			<!-- Fin de contenido principal -->
@@ -500,11 +501,11 @@ agregarClienteCanasta('<?= $_GET['titular']; ?>', 1);
 $('#dtpFechaIniciov3').val('<?php
 	$date = new DateTime();
 	echo  $date->format('d/m/Y');
-?>');
-$('#dtpFechaIniciov3').bootstrapMaterialDatePicker({
+?>'); 
+$('#dtpFechaIniciov3').bootstrapMaterialDatePicker({ /* shortTime : true, */
 	format: 'DD/MM/YYYY',
 	lang: 'es',
-	time: false,
+	time: false, 
 	weekStart: 1,
 	nowButton : true,
 	switchOnClick : true,
@@ -528,6 +529,7 @@ $('#dtpFechaPrimerv3').bootstrapMaterialDatePicker({
 	nowButton : false,
 	switchOnClick : true,
 	minDate :  moment().add(1, 'days'),
+	disabledDays: [6,7],
 	// okButton: false,
 	okText: '<i class="icofont-check-alt"></i> Aceptar',
 	nowText: '<i class="icofont-bubble-down"></i> Hoy',
@@ -746,6 +748,7 @@ $('#sltTipoPrestamo').change(function() {
 	}
 });
 $('#dtpFechaIniciov3').change(function() {
+	$('#dtpFechaPrimerv3').val('01/'+moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY' ).add(1, 'month').format('MM/YYYY'))
 	$('#dtpFechaPrimerv3').bootstrapMaterialDatePicker( 'setMinDate', moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY').add(1, 'days') );
 });
 <?php if(isset( $_GET['credito'])): ?>
