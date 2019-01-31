@@ -41,6 +41,9 @@ $base58 = new StephenHill\Base58();?>
 			<h2 class="purple-text text-lighten-1"><i class="icofont-users"></i> Zona clientes</h2><hr>
 			
 			<button class="btn btn-infocat btn-outline btnSinBorde" id="btnAddClientes"><i class="icofont-ui-add"></i> Nuevo cliente</button>
+		<? if( isset($_GET['idCliente']) && in_array($_COOKIE['ckidUsuario'], $soloDios)){ ?>
+			<button class="btn btn-dark btn-outline btnSinBorde" id="btnEditClientes"><i class="icofont-edit"></i> Editar cliente</button>
+		<? } ?>
 			<div class="form-inline hidden">
 				<div class="form-group"><label for="" style='margin-top:-3px'>Filtro de clientes:</label> <input type="text" class='form-control' id="txtClientesZon" placeholder='Clientes' autocomplete="off" style="margin-bottom: 0px;">
 				<button class="btn btn-infocat btn-outline btnSinBorde" id="btnFiltrarClientes"><i class="icofont-search"></i></button>
@@ -176,6 +179,102 @@ $base58 = new StephenHill\Base58();?>
 	</div>
 </div>
 
+<? if( isset($_GET['idCliente']) && in_array($_COOKIE['ckidUsuario'], $soloDios)){?>
+<!-- Modal para Crear un edit cliente  -->
+<div class="modal fade" id="modalEditCliente" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+		<div class="modal-header-infocat">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"><i class="icofont icofont-animal-cat-alt-4"></i> Editar datos de cliente</h4>
+		</div>
+		<div class="modal-body">
+			<div class="container-fluid">
+			<div class="row">
+				<div class="row "><div class="col-xs-6">
+					<label for="">D.N.I.</label> <input type="text" id='txtDniClienteUpd' maxlength="8" class='form-control soloNumeros' data-id="">
+				</div>
+				<div class="col-xs-6"><br><label for="" class="hidden red-text text-darken-1" id="lblAlertDuplicadoUpd"></label></div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4"><span class="obligatorio">*</span> <label for="">Apellido paterno</label><input type="text" id="txtPaternoClienteUpd" class="form-control mayuscula" autocomplete='nope'></div>
+					<div class="col-xs-4"><span class="obligatorio">*</span> <label for="">Apellido materno</label><input type="text" id="txtMaternoClienteUpd" class="form-control mayuscula" autocomplete='nope'></div>
+					<div class="col-xs-4"><label for="">Nombres</label> <input type="text" id="txtNombresClienteUpd" class='form-control mayuscula' autocomplete='nope'></div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4"><label for="">Sexo</label>
+						<select class="selectpicker" id="sltSexoUpd" title="Seleccione un sexo" data-width="100%" data-live-search="true" data-size="15">
+							<option value="0">Femenino</option>
+							<option value="1">Masculino</option>
+						</select>
+					</div>
+			
+					<div class="col-xs-4">
+						<label for="">Estado civil</label>
+						<select class="selectpicker" title="Estado civil" id="sltEstadoCivilUpd" data-width="100%" data-live-search="true" data-size="15">
+							<?php include 'OPTEstadoCivil.php'; ?>
+						</select>
+					</div>
+					<div class="col-xs-4">
+						<label for="">N° de hijos dependientes</label>
+						<input type="number" class="form-control" value="0" id="txtNumHijosUpd">
+					</div>
+				</div>
+				<div class="row container-fluid hidden" id="divSoloCasadoUpd">
+					<label for="">Anexar cónyugue</label>
+					<select class="selectpicker" title="Parejas solteras" id="sltBuscarParejaUpd" data-width="100%" data-live-search="true" data-size="15">
+						<option value="0">Busque al cliente</option>
+					</select>
+					
+				</div>
+				<div class="row container-fluid" id="divDireccionCasaUpd">
+					<label for="">Dirección domiciliar</label>
+					<div class="row container-fluid">
+						<div class="col-xs-4" id="divCalles"><select id="slpCallesUpd" class="selectpicker" data-width="100%" data-live-search="true" data-size="15" title="Calle"><?php include 'php/OPTCalles.php'; ?></select></div>
+						<div class="col-xs-12 col-sm-8"><input type="text" class="form-control mayuscula" id="txtDireccionCasaUpd"  placeholder='Dirección de hogar' autocomplete='nope'></div>
+						<div class="col-xs-4"><input type="text" class="form-control mayuscula" id="txtNumeroCasaUpd" placeholder='#' autocomplete='nope'></div>
+						<div class="col-xs-4"><select class="selectpicker" title="Zona" id="sltDireccionExtraUpd" data-width="100%" data-live-search="true" data-size="15"><?php include 'php/OPTZona.php'; ?></select></div>
+						<div class="col-xs-12"><input type="text" id='txtReferenciaCasaUpd' class='form-control mayuscula' placeholder='Referencia de la casa' autocomplete='nope'></div>
+						<div class="col-xs-4" id="divDepartamentosUpd"><select id="slpDepartamentosUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Departamento"><?php include 'php/OPTDepartamento.php'; ?></select></div>
+						<div class="col-xs-4" id="idProvinciasUpd"><select id="slpProvinciasUpd" class="selectpicker" data-width="100%" data-live-search="true" title="Provincia"></select></div>
+						<div class="col-xs-4" id="idDistritosUpd"><select id="slpDistritosUpd" class="selectpicker" data-width="100%" data-live-search="true" title="Distrito"></select></div>
+					</div>
+					<div class="checkbox checkbox-infocat checkbox-circle">
+						<input type="checkbox" class="styled" checked id="chkDireccionUpd">
+						<label for="chkDireccionUpd">Dirección de hogar y de negocio son iguales</label>
+					</div>
+				</div>
+				<div class="row container-fluid hidden" id="divDireccionNegocioUpd">
+				<label style="display: table;">Dirección de negocio</label>
+					<div class="col-xs-4" id="divCallesNegUpd"><select id="slpCallesNegUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Calle"><?php include 'php/OPTCalles.php'; ?></select></div>
+				    
+				    <div class="col-xs-12 col-sm-8"><input type="text" class="form-control mayuscula" id="txtDireccionNegocioUpd" placeholder='Dirección de negocio' autocomplete='nope'></div>
+						<div class="col-xs-4"><input type="text" class="form-control mayuscula" id="txtNumeroNegocUpd" placeholder='#' autocomplete='nope'></div>
+						<div class="col-xs-4"><select class="selectpicker" title="Zona" id="sltDireccionExtraNegocUpd" data-width="100%" data-live-search="true" data-size="15"><?php include 'php/OPTZona.php'; ?></select></div>
+						<div class="col-xs-12"><input type="text" id='txtReferenciaNegocUpd' class='form-control mayuscula' placeholder='Referencia del negocio' autocomplete='nope'></div>
+						<div class="col-xs-4" id="divDepartamentosNegocUpd"><select id="slpDepartamentosNegocUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Departamento"><?php include 'php/OPTDepartamento.php'; ?></select></div>
+						<div class="col-xs-4" id="idProvinciasNegocUpd"><select id="slpProvinciasNegocUpd" class="selectpicker" data-width="100%" data-live-search="true"  title="Provincia"></select></div>
+						<div class="col-xs-4" id="idDistritosNegocUpd"><select id="slpDistritosNegocUpd" class="selectpicker" data-width="100%" data-live-search="true" title="Distrito"></select></div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6"><label for="">Celular personal</label> <input type="text" id="txtCelPersonalUpd" class="form-control" autocomplete='nope'></div>
+					<div class="col-xs-6"><label for="">Celular referencial</label> <input type="text" id="txtCelReferenciaUpd" class="form-control" autocomplete='nope'></div>
+				</div>
+			
+		</div>
+			
+		<div class="modal-footer">
+			<div class="divError text-left animated fadeIn hidden" style="margin-bottom: 20px;"><i class="icofont icofont-animal-cat-alt-4"></i> Lo sentimos, <span class="spanError"></span></div>
+			<button class="btn btn-infocat btn-outline" id="btnGuardarClienteUpd" ><i class="icofont icofont-refresh"></i> Actualizar</button>
+
+		</div>
+	</div>
+	</div>
+</div>
+</div>
+</div>
+<? } ?>
+
 
 <?php include 'footer.php'; ?>
 <?php include 'php/modals.php'; ?>
@@ -219,6 +318,9 @@ $(document).ready(function(){
 $('#btnAddClientes').click(function() {
 	$('#txtDniCliente').val('');
 	$('#modalNewCliente').modal('show');
+});
+$('#btnEditClientes').click(function() {
+	$('#modalEditCliente').modal('show');
 });
 $('#chkDireccion').change(function() {
 	if( $('#chkDireccion').is(':checked') ){

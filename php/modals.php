@@ -117,7 +117,7 @@
 	</div>
 </div>
 
-<!-- Modal para decir que hubo un error  -->
+<!-- Modal para Crear un nuevo cliente  -->
 <div class="modal fade" id="modalNewCliente" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 <div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">
@@ -211,6 +211,7 @@
 </div>
 </div>
 </div>
+
 
 <!-- Modal para: Verificar o Denegar Credito -->
 <?php if(isset($_GET['credito']) && $rowCr['presAprobado']=== 'Sin aprobar'): ?>

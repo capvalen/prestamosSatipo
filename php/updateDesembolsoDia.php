@@ -68,7 +68,7 @@ switch ($modo){
 		break;
 }
 
-if( $modo == '3'){
+//if( $modo == '3'){
 	//Saber la primera fecha de pago
 	$sqlPrimera="SELECT cuotFechaPago FROM `prestamo_cuotas` where idPrestamo = {$idPrestamo} and cuotCuota<>0 order by cuotFechaPago asc limit 1";
 	$resultadoPrimera=$prisionero->query($sqlPrimera);
@@ -78,10 +78,10 @@ if( $modo == '3'){
 	if( $fecha->diff($fechaAnterior)->format('%R%a')>0){
 		$fecha = $fechaAnterior;
 	}else{
-		$fecha = new DateTime($fechaAnterior->add(new DateInterval('P1M'))->format('Y-m').'-01');
+		$fecha = new DateTime($fechaAnterior->add($intervalo)->format('Y-m').'-01');
 	}
 	
-}
+//}
 
 
 $sqlCuotasFechas= "";
@@ -110,6 +110,7 @@ $sqlCuotasFechas= "";
 				else{ $autoFechas[$j]['cuotFechaPago']= $fecha->format('Y-m-d');}
 				//echo "sale ".$autoFechas[$j]['cuotFechaPago']."\n";
 				//--------------  HACER EL UPDATEEEEEEEEEEE --------------------- 
+				//echo $autoFechas[$j]['cuotFechaPago']."\n";
 				$sqlCuotasFechas=$sqlCuotasFechas."UPDATE `prestamo_cuotas` SET `cuotFechaPago`='".$autoFechas[$j]['cuotFechaPago']."' WHERE `idCuota`=".$autoFechas[$j]['idCuota'].";";
 				$j++;
 				
