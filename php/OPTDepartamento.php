@@ -1,5 +1,5 @@
 <?php 
-header('Content-Type: text/html; charset=utf8');
+//header('Content-Type: text/html; charset=utf8');
 require("conkarl.php");
 
 $sql = mysqli_query($conection,"SELECT `idDepartamento`, lower( `departamento`) as `departamento` FROM `departamento` where  `idDepartamento` <>99;");

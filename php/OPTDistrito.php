@@ -1,5 +1,5 @@
 <?php 
-header('Content-Type: text/html; charset=utf8');
+//header('Content-Type: text/html; charset=utf8');
 require("conkarl.php");
 //echo "SELECT * FROM `distrito` where idProvincia={$_POST['distri']}";
 $sql = mysqli_query($conection,"SELECT `idDistrito`, lower(`distrito`) as `distrito`, `idProvincia` FROM `distrito` where idProvincia={$_POST['distri']}");

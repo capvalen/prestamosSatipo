@@ -192,7 +192,7 @@ $base58 = new StephenHill\Base58();?>
 			<div class="container-fluid">
 			<div class="row">
 				<div class="row "><div class="col-xs-6">
-					<label for="">D.N.I.</label> <input type="text" id='txtDniClienteUpd' maxlength="8" class='form-control soloNumeros' data-id="">
+					<label for="">D.N.I.</label> <input type="text" id='txtDniClienteUpd' maxlength="8" class='form-control soloNumeros' value="<?= $rowDato['cliDni']; ?>">
 				</div>
 				<div class="col-xs-6"><br><label for="" class="hidden red-text text-darken-1" id="lblAlertDuplicadoUpd"></label></div>
 				</div>
@@ -212,7 +212,7 @@ $base58 = new StephenHill\Base58();?>
 					<div class="col-xs-4">
 						<label for="">Estado civil</label>
 						<select class="selectpicker" title="Estado civil" id="sltEstadoCivilUpd" data-width="100%" data-live-search="true" data-size="15">
-							<?php include 'OPTEstadoCivil.php'; ?>
+							<?php include 'php/OPTEstadoCivil.php'; ?>
 						</select>
 					</div>
 					<div class="col-xs-4">
@@ -320,6 +320,52 @@ $('#btnAddClientes').click(function() {
 	$('#modalNewCliente').modal('show');
 });
 $('#btnEditClientes').click(function() {
+	$.ajax({url: 'php/solicitarTodoCliente.php', type: 'POST', data: { idCli: <?= $idCli; ?>}}).done(function(resp) { console.log(JSON.parse(resp)[0]);
+		var jCliente = JSON.parse(resp)[0];
+		$('#txtPaternoClienteUpd').val(jCliente.cliApellidoPaterno);
+		$('#txtMaternoClienteUpd').val(jCliente.cliApellidoMaterno);
+		$('#txtNombresClienteUpd').val(jCliente.cliNombres);
+		$('#sltSexoUpd').selectpicker('val',jCliente.cliSexo);
+		$('#sltEstadoCivilUpd').selectpicker('val',jCliente.idEstadoCivil);
+
+		//Datos de casa:
+		$('#slpCallesUpd').selectpicker('val', $("#slpCallesUpd option:contains('" + jCliente.calDescripcion + "')").attr('value'));
+		$('#txtDireccionCasaUpd').val(jCliente.addrDireccion);
+		$('#txtNumeroCasaUpd').val(jCliente.addrNumero);
+		$('#sltDireccionExtraUpd').selectpicker('val',jCliente.idZona);
+		$('#txtReferenciaCasaUpd').val(jCliente.addrReferencia);
+		$('#slpDepartamentosUpd').val(jCliente.departamento).selectpicker('refresh');
+		$.ajax({url: 'php/OPTProvincia.php', type: 'POST', data: { depa: jCliente.idDepartamento }}).done(function(resp) {
+			$('#slpProvinciasUpd').html(resp).selectpicker('refresh');
+			$('#slpProvinciasUpd').val(jCliente.provincia).selectpicker('refresh');
+		});
+		$.ajax({url: 'php/OPTDistrito.php', type: 'POST', data: { distri: jCliente.idProvincia }}).done(function(resp) {
+			$('#slpDistritosUpd').html(resp).selectpicker('refresh');
+			$('#slpDistritosUpd').val(jCliente.distrito).selectpicker('refresh');
+		});
+
+		$('#chkDireccionUpd').prop('checked', jCliente.cliDireccionesIgual)
+
+		//Datos de Negocio:
+		$('#slpCallesUpd').selectpicker('val', $("#slpCallesUpd option:contains('" + jCliente.ncalDescripcion + "')").attr('value'));
+		$('#txtDireccionNegocioUpd').val(jCliente.naddrDireccion);
+		$('#txtNumeroNegocUpd').val(jCliente.naddrNumero);
+		$('#sltDireccionExtraNegocUpd').selectpicker('val',jCliente.nidZona);
+		$('#txtReferenciaNegocUpd').val(jCliente.naddrReferencia);
+		$('#slpDepartamentosNegocUpd').val(jCliente.ndepartamento).selectpicker('refresh');
+		$.ajax({url: 'php/OPTProvincia.php', type: 'POST', data: { depa: jCliente.nidDepartamento }}).done(function(resp) {
+			$('#slpProvinciasNegocUpd').html(resp).selectpicker('refresh');
+			$('#slpProvinciasNegocUpd').val(jCliente.nprovincia).selectpicker('refresh');
+		});
+		$.ajax({url: 'php/OPTDistrito.php', type: 'POST', data: { distri: jCliente.nidProvincia }}).done(function(resp) {
+			$('#slpDistritosNegocUpd').html(resp).selectpicker('refresh');
+			$('#slpDistritosNegocUpd').val(jCliente.ndistrito).selectpicker('refresh');
+		});
+		$('#txtCelPersonalUpd').val(jCliente.cliCelularPersonal);
+		$('#txtCelReferenciaUpd').val(jCliente.cliCelularReferencia);
+		
+		
+	});
 	$('#modalEditCliente').modal('show');
 });
 $('#chkDireccion').change(function() {
@@ -331,6 +377,17 @@ $('#chkDireccion').change(function() {
 		$(this).parent().find('label').text('Dirección de hogar y de negocio son diferentes');
 		$('#divDireccionNegocio').removeClass('hidden');
 		$('#txtDireccionNegocio').focus();
+	}
+});
+$('#chkDireccionUpd').change(function() {
+	if( $('#chkDireccionUpd').is(':checked') ){
+		$(this).parent().find('label').text('Dirección de hogar y de negocio son iguales');
+		$('#divDireccionNegocioUpd').addClass('hidden');
+		$('#txtCelPersonalUpd').focus();
+	}else{
+		$(this).parent().find('label').text('Dirección de hogar y de negocio son diferentes');
+		$('#divDireccionNegocioUpd').removeClass('hidden');
+		$('#txtDireccionNegocioUpd').focus();
 	}
 });
 $('#txtDniCliente').focusout(function () {
