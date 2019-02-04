@@ -192,17 +192,17 @@ $base58 = new StephenHill\Base58();?>
 			<div class="container-fluid">
 			<div class="row">
 				<div class="row "><div class="col-xs-6">
-					<label for="">D.N.I.</label> <input type="text" id='txtDniClienteUpd' maxlength="8" class='form-control soloNumeros' value="<?= $rowDato['cliDni']; ?>">
+					<label for=""><span class="obligatorio">*</span> D.N.I.</label> <input type="text" id='txtDniClienteUpd' maxlength="8" class='form-control soloNumeros' value="<?= $rowDato['cliDni']; ?>">
 				</div>
 				<div class="col-xs-6"><br><label for="" class="hidden red-text text-darken-1" id="lblAlertDuplicadoUpd"></label></div>
 				</div>
 				<div class="row">
 					<div class="col-xs-4"><span class="obligatorio">*</span> <label for="">Apellido paterno</label><input type="text" id="txtPaternoClienteUpd" class="form-control mayuscula" autocomplete='nope'></div>
 					<div class="col-xs-4"><span class="obligatorio">*</span> <label for="">Apellido materno</label><input type="text" id="txtMaternoClienteUpd" class="form-control mayuscula" autocomplete='nope'></div>
-					<div class="col-xs-4"><label for="">Nombres</label> <input type="text" id="txtNombresClienteUpd" class='form-control mayuscula' autocomplete='nope'></div>
+					<div class="col-xs-4"><span class="obligatorio">*</span> <label for="">Nombres</label> <input type="text" id="txtNombresClienteUpd" class='form-control mayuscula' autocomplete='nope'></div>
 				</div>
 				<div class="row">
-					<div class="col-xs-4"><label for="">Sexo</label>
+					<div class="col-xs-4"><label for=""><span class="obligatorio">*</span> Sexo</label>
 						<select class="selectpicker" id="sltSexoUpd" title="Seleccione un sexo" data-width="100%" data-live-search="true" data-size="15">
 							<option value="0">Femenino</option>
 							<option value="1">Masculino</option>
@@ -210,14 +210,14 @@ $base58 = new StephenHill\Base58();?>
 					</div>
 			
 					<div class="col-xs-4">
-						<label for="">Estado civil</label>
+						<label for=""><span class="obligatorio">*</span> Estado civil</label>
 						<select class="selectpicker" title="Estado civil" id="sltEstadoCivilUpd" data-width="100%" data-live-search="true" data-size="15">
 							<?php include 'php/OPTEstadoCivil.php'; ?>
 						</select>
 					</div>
 					<div class="col-xs-4">
 						<label for="">N° de hijos dependientes</label>
-						<input type="number" class="form-control" value="0" id="txtNumHijosUpd">
+						<input type="number" class="form-control" value="0" id="txtNumHijosUpd" min=0>
 					</div>
 				</div>
 				<div class="row container-fluid hidden" id="divSoloCasadoUpd">
@@ -228,13 +228,13 @@ $base58 = new StephenHill\Base58();?>
 					
 				</div>
 				<div class="row container-fluid" id="divDireccionCasaUpd">
-					<label for="">Dirección domiciliar</label>
+					<label for=""><span class="obligatorio">*</span> Dirección domiciliar</label>
 					<div class="row container-fluid">
-						<div class="col-xs-4" id="divCalles"><select id="slpCallesUpd" class="selectpicker" data-width="100%" data-live-search="true" data-size="15" title="Calle"><?php include 'php/OPTCalles.php'; ?></select></div>
-						<div class="col-xs-12 col-sm-8"><input type="text" class="form-control mayuscula" id="txtDireccionCasaUpd"  placeholder='Dirección de hogar' autocomplete='nope'></div>
-						<div class="col-xs-4"><input type="text" class="form-control mayuscula" id="txtNumeroCasaUpd" placeholder='#' autocomplete='nope'></div>
-						<div class="col-xs-4"><select class="selectpicker" title="Zona" id="sltDireccionExtraUpd" data-width="100%" data-live-search="true" data-size="15"><?php include 'php/OPTZona.php'; ?></select></div>
-						<div class="col-xs-12"><input type="text" id='txtReferenciaCasaUpd' class='form-control mayuscula' placeholder='Referencia de la casa' autocomplete='nope'></div>
+						<div class="col-xs-3" id="divCallesUpd"><select id="slpCallesUpd" class="selectpicker" data-width="100%" data-live-search="true" data-size="15" title="Calle"><?php include 'php/OPTCalles.php'; ?></select></div>
+						<div class="col-xs-12 col-sm-7"><input type="text" class="form-control mayuscula" id="txtDireccionCasaUpd"  placeholder='Dirección de hogar' autocomplete='nope'></div>
+						<div class="col-xs-2"><input type="text" class="form-control mayuscula" id="txtNumeroCasaUpd" placeholder='#' autocomplete='nope'></div>
+						<div class="col-xs-4" id="divDireccionExtraUpd"><select class="selectpicker" title="Zona" id="sltDireccionExtraUpd" data-width="100%" data-live-search="true" data-size="15"><?php include 'php/OPTZona.php'; ?></select></div>
+						<div class="col-xs-8"><input type="text" id='txtReferenciaCasaUpd' class='form-control mayuscula' placeholder='Referencia de la casa' autocomplete='nope'></div>
 						<div class="col-xs-4" id="divDepartamentosUpd"><select id="slpDepartamentosUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Departamento"><?php include 'php/OPTDepartamento.php'; ?></select></div>
 						<div class="col-xs-4" id="idProvinciasUpd"><select id="slpProvinciasUpd" class="selectpicker" data-width="100%" data-live-search="true" title="Provincia"></select></div>
 						<div class="col-xs-4" id="idDistritosUpd"><select id="slpDistritosUpd" class="selectpicker" data-width="100%" data-live-search="true" title="Distrito"></select></div>
@@ -246,25 +246,25 @@ $base58 = new StephenHill\Base58();?>
 				</div>
 				<div class="row container-fluid hidden" id="divDireccionNegocioUpd">
 				<label style="display: table;">Dirección de negocio</label>
-					<div class="col-xs-4" id="divCallesNegUpd"><select id="slpCallesNegUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Calle"><?php include 'php/OPTCalles.php'; ?></select></div>
+					<div class="col-xs-3" id="divCallesNegUpd"><select id="slpCallesNegUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Calle"><?php include 'php/OPTCalles.php'; ?></select></div>
 				    
-				    <div class="col-xs-12 col-sm-8"><input type="text" class="form-control mayuscula" id="txtDireccionNegocioUpd" placeholder='Dirección de negocio' autocomplete='nope'></div>
-						<div class="col-xs-4"><input type="text" class="form-control mayuscula" id="txtNumeroNegocUpd" placeholder='#' autocomplete='nope'></div>
-						<div class="col-xs-4"><select class="selectpicker" title="Zona" id="sltDireccionExtraNegocUpd" data-width="100%" data-live-search="true" data-size="15"><?php include 'php/OPTZona.php'; ?></select></div>
-						<div class="col-xs-12"><input type="text" id='txtReferenciaNegocUpd' class='form-control mayuscula' placeholder='Referencia del negocio' autocomplete='nope'></div>
+				    <div class="col-xs-12 col-sm-7"><input type="text" class="form-control mayuscula" id="txtDireccionNegocioUpd" placeholder='Dirección de negocio' autocomplete='nope'></div>
+						<div class="col-xs-2"><input type="text" class="form-control mayuscula" id="txtNumeroNegocUpd" placeholder='#' autocomplete='nope'></div>
+						<div class="col-xs-4"  id="divDireccionExtraNegUpd"><select class="selectpicker" title="Zona" id="sltDireccionExtraNegocUpd" data-width="100%" data-live-search="true" data-size="15"><?php include 'php/OPTZona.php'; ?></select></div>
+						<div class="col-xs-8"><input type="text" id='txtReferenciaNegocUpd' class='form-control mayuscula' placeholder='Referencia del negocio' autocomplete='nope'></div>
 						<div class="col-xs-4" id="divDepartamentosNegocUpd"><select id="slpDepartamentosNegocUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Departamento"><?php include 'php/OPTDepartamento.php'; ?></select></div>
 						<div class="col-xs-4" id="idProvinciasNegocUpd"><select id="slpProvinciasNegocUpd" class="selectpicker" data-width="100%" data-live-search="true"  title="Provincia"></select></div>
 						<div class="col-xs-4" id="idDistritosNegocUpd"><select id="slpDistritosNegocUpd" class="selectpicker" data-width="100%" data-live-search="true" title="Distrito"></select></div>
 				</div>
 				<div class="row">
-					<div class="col-xs-6"><label for="">Celular personal</label> <input type="text" id="txtCelPersonalUpd" class="form-control" autocomplete='nope'></div>
-					<div class="col-xs-6"><label for="">Celular referencial</label> <input type="text" id="txtCelReferenciaUpd" class="form-control" autocomplete='nope'></div>
+					<div class="col-xs-6"><label for=""><span class="obligatorio">*</span> Celular personal</label> <input type="text" id="txtCelPersonalUpd" class="form-control" autocomplete='nope'></div>
+					<div class="col-xs-6"><label for=""><span class="obligatorio">*</span> Celular referencial</label> <input type="text" id="txtCelReferenciaUpd" class="form-control" autocomplete='nope'></div>
 				</div>
 			
 		</div>
 			
 		<div class="modal-footer">
-			<div class="divError text-left animated fadeIn hidden" style="margin-bottom: 20px;"><i class="icofont icofont-animal-cat-alt-4"></i> Lo sentimos, <span class="spanError"></span></div>
+			<div class="divError text-left animated fadeIn hidden" style="margin-bottom: 20px;"><i class="icofont-cat-alt-3"></i> Lo sentimos, <span class="spanError"></span></div>
 			<button class="btn btn-infocat btn-outline" id="btnGuardarClienteUpd" ><i class="icofont icofont-refresh"></i> Actualizar</button>
 
 		</div>
@@ -329,6 +329,7 @@ $('#btnEditClientes').click(function() {
 		$('#sltEstadoCivilUpd').selectpicker('val',jCliente.idEstadoCivil);
 
 		//Datos de casa:
+		$('#divDireccionCasaUpd').attr('data-id', jCliente.cliDireccionCasa);
 		$('#slpCallesUpd').selectpicker('val', $("#slpCallesUpd option:contains('" + jCliente.calDescripcion + "')").attr('value'));
 		$('#txtDireccionCasaUpd').val(jCliente.addrDireccion);
 		$('#txtNumeroCasaUpd').val(jCliente.addrNumero);
@@ -347,7 +348,8 @@ $('#btnEditClientes').click(function() {
 		$('#chkDireccionUpd').prop('checked', jCliente.cliDireccionesIgual)
 
 		//Datos de Negocio:
-		$('#slpCallesUpd').selectpicker('val', $("#slpCallesUpd option:contains('" + jCliente.ncalDescripcion + "')").attr('value'));
+		$('#divDireccionNegocioUpd').attr('data-id', jCliente.cliDireccionNegocio);
+		$('#slpCallesNegUpd').selectpicker('val', $("#slpCallesNegUpd option:contains('" + jCliente.ncalDescripcion + "')").attr('value'));
 		$('#txtDireccionNegocioUpd').val(jCliente.naddrDireccion);
 		$('#txtNumeroNegocUpd').val(jCliente.naddrNumero);
 		$('#sltDireccionExtraNegocUpd').selectpicker('val',jCliente.nidZona);
@@ -363,7 +365,6 @@ $('#btnEditClientes').click(function() {
 		});
 		$('#txtCelPersonalUpd').val(jCliente.cliCelularPersonal);
 		$('#txtCelReferenciaUpd').val(jCliente.cliCelularReferencia);
-		
 		
 	});
 	$('#modalEditCliente').modal('show');
@@ -458,6 +459,57 @@ $('#btnGuardarClienteNew').click(function() {
 				window.location.href = 'clientes.php?buscar='+resp;
 			}
 	});
+});
+$('#btnGuardarClienteUpd').click(function() {
+	if( $('#txtDniClienteUpd').val().length <8 ){
+		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('El DNI no es correcto');
+	}else if( $('#txtPaternoClienteUpd').val()!='' || $('#txtMaternoClienteUpd').val()!='' || $('#txtNombresClienteUpd').val()!='' ){
+		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique los campos de nombres');
+	}else if( $('#txtDireccionCasaUpd').val()!='' ||  $('#txtNumeroCasaUpd').val()!='' ){
+		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique el campo de dirección');
+	}else if($('#chkDireccionUpd').is('checked')){ //Verificar todo el negocio
+		if( $('#txtDireccionNegocioUpd').val()!='' ||  $('#txtNumeroNegocUpd').val()!='' ){
+			$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique el campo de dirección del negocio');
+		}
+	}
+	else if( $('#txtCelPersonalUpd').val()!='' || $('#txtCelReferenciaUpd').val()!='' ){
+		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique los campos de teléfono');
+	}else{
+		var hijos =0;
+		if( $('#txtNumHijosUpd').val()!='' ){hijos = $('#txtNumHijosUpd').val();}
+		var jClienteupd = {
+			dni: $('#txtDniClienteUpd').val(),
+			apellidoPaterno: $('#txtPaternoClienteUpd').val(),
+			apellidoMaterno: $('#txtMaternoClienteUpd').val(),
+			nombres: $('#txtNombresClienteUpd').val(),
+			sexo: $('#sltSexoUpd').val(),
+			estadocivil: $('#sltEstadoCivilUpd').val(),
+			estadocivil: $('#sltEstadoCivilUpd').val(),
+			hijos: hijos,
+			casaId: $('#divDireccionCasaUpd').attr('data-id'),
+			calleCasa: $("#slpCallesUpd option:contains('"+$('#divCallesUpd .dropdown-toggle').attr('title')+"')").val(),
+			direccionCasa: $('#txtDireccionCasaUpd').val(),
+			numeroCasa: $('#txtNumeroCasaUpd').val(),
+			calleCasa: $("#sltDireccionExtraUpd option:contains('"+$('#divDireccionExtraUpd .dropdown-toggle').attr('title')+"')").val(),
+			referenciaCasa: $('#txtReferenciaCasaUpd').val(),
+			departamentoCasa: $("#slpDepartamentosUpd option:contains('"+$('#divDepartamentosUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
+			provinciaCasa: $("#slpProvinciasUpd option:contains('"+$('#idProvinciasUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
+			distritoCasa: $("#slpDistritosUpd option:contains('"+$('#idDistritosUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
+			esCasa: $('#chkDireccionUpd').is('checked'),
+			negocioId: $('#divDireccionNegocioUpd').attr('data-id'),
+			calleNeg: $("#slpCallesNegUpd option:contains('"+$('#divCallesNegUpd .dropdown-toggle').attr('title')+"')").val(),
+			direccionNeg: $('#txtDireccionNegocioUpd').val(),
+			numeroNeg: $('#txtNumeroNegocUpd').val(),
+			calleNeg: $("#sltDireccionExtraNegocUpd option:contains('"+$('#divDireccionExtraNegUpd .dropdown-toggle').attr('title')+"')").val(),
+			referenciaNeg: $('#txtReferenciaNegocUpd').val(),
+			departamentoNeg: $("#slpDepartamentosNegocUpd option:contains('"+$('#divDepartamentosNegocUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
+			provinciaNeg: $("#slpProvinciasNegocUpd option:contains('"+$('#idProvinciasNegocUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
+			distritoNeg: $("#slpDistritosNegocUpd option:contains('"+$('#idDistritosNegocUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
+			celPersonal: $('#txtCelPersonalUpd').val(),
+			celRefencia: $('#txtCelReferenciaUpd').val()
+
+		}
+	}
 });
 // $('.soloNumeros').on('input', function () {
 // 	this.value = this.value.replace(/[^0-9]/g,'');

@@ -6,7 +6,7 @@ ca.calDescripcion, lower(a.addrDireccion) as addrDireccion, lower(a.addrReferenc
 lower(di.distrito) as distrito, lower(pro.provincia) as provincia, lower(de.departamento) as departamento,
 can.calDescripcion as ncalDescripcion, lower(an.addrDireccion) as naddrDireccion, lower(an.addrReferencia) as naddrReferencia, an.addrNumero as naddrNumero, 
 lower(din.distrito) as ndistrito, lower(pron.provincia) as nprovincia, lower(den.departamento) as ndepartamento,
-`cliCelularPersonal`, `cliCelularReferencia`, ec.civDescripcion, `cliActivo`, ec.idEstadoCivil, a.idZona, an.idZona as nidZona, a.idDepartamento, a.idProvincia, a.idDistrito,  an.idDepartamento as nidDepartamento, an.idProvincia as nidProvincia, an.idDistrito as nidDistrito
+`cliCelularPersonal`, `cliCelularReferencia`, ec.civDescripcion, `cliActivo`, ec.idEstadoCivil, a.idZona, an.idZona as nidZona, a.idDepartamento, a.idProvincia, a.idDistrito,  an.idDepartamento as nidDepartamento, an.idProvincia as nidProvincia, an.idDistrito as nidDistrito, c.`cliDireccionCasa`, c.`cliDireccionNegocio`
 FROM `cliente` c
 inner join address a on a.idAddress= c.`cliDireccionCasa`
 inner join distrito di on di.idDistrito = a.idDistrito
