@@ -319,6 +319,7 @@ $('#btnAddClientes').click(function() {
 	$('#txtDniCliente').val('');
 	$('#modalNewCliente').modal('show');
 });
+<? if(isset($_GET['idCliente'])){ ?>
 $('#btnEditClientes').click(function() {
 	$.ajax({url: 'php/solicitarTodoCliente.php', type: 'POST', data: { idCli: <?= $idCli; ?>}}).done(function(resp) { console.log(JSON.parse(resp)[0]);
 		var jCliente = JSON.parse(resp)[0];
@@ -369,6 +370,7 @@ $('#btnEditClientes').click(function() {
 	});
 	$('#modalEditCliente').modal('show');
 });
+<? } ?>
 $('#chkDireccion').change(function() {
 	if( $('#chkDireccion').is(':checked') ){
 		$(this).parent().find('label').text('Dirección de hogar y de negocio son iguales');
@@ -463,27 +465,27 @@ $('#btnGuardarClienteNew').click(function() {
 $('#btnGuardarClienteUpd').click(function() {
 	if( $('#txtDniClienteUpd').val().length <8 ){
 		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('El DNI no es correcto');
-	}else if( $('#txtPaternoClienteUpd').val()!='' || $('#txtMaternoClienteUpd').val()!='' || $('#txtNombresClienteUpd').val()!='' ){
+	}else if( $('#txtPaternoClienteUpd').val()=='' || $('#txtMaternoClienteUpd').val()=='' || $('#txtNombresClienteUpd').val()=='' ){
 		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique los campos de nombres');
-	}else if( $('#txtDireccionCasaUpd').val()!='' ||  $('#txtNumeroCasaUpd').val()!='' ){
+	}else if( $('#txtDireccionCasaUpd').val()=='' ||  $('#txtNumeroCasaUpd').val()=='' ){
 		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique el campo de dirección');
 	}else if($('#chkDireccionUpd').is('checked')){ //Verificar todo el negocio
-		if( $('#txtDireccionNegocioUpd').val()!='' ||  $('#txtNumeroNegocUpd').val()!='' ){
+		if( $('#txtDireccionNegocioUpd').val()=='' ||  $('#txtNumeroNegocUpd').val()=='' ){
 			$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique el campo de dirección del negocio');
 		}
 	}
-	else if( $('#txtCelPersonalUpd').val()!='' || $('#txtCelReferenciaUpd').val()!='' ){
+	else if( $('#txtCelPersonalUpd').val()=='' || $('#txtCelReferenciaUpd').val()=='' ){
 		$('#modalEditCliente .divError').removeClass('hidden').find('.spanError').text('Verifique los campos de teléfono');
 	}else{
 		var hijos =0;
-		if( $('#txtNumHijosUpd').val()!='' ){hijos = $('#txtNumHijosUpd').val();}
+		if( $('#txtNumHijosUpd').val()=='' ){hijos = $('#txtNumHijosUpd').val();}
 		var jClienteupd = {
+			idCliente: <?= $idCli;?>,
 			dni: $('#txtDniClienteUpd').val(),
 			apellidoPaterno: $('#txtPaternoClienteUpd').val(),
 			apellidoMaterno: $('#txtMaternoClienteUpd').val(),
 			nombres: $('#txtNombresClienteUpd').val(),
 			sexo: $('#sltSexoUpd').val(),
-			estadocivil: $('#sltEstadoCivilUpd').val(),
 			estadocivil: $('#sltEstadoCivilUpd').val(),
 			hijos: hijos,
 			casaId: $('#divDireccionCasaUpd').attr('data-id'),
@@ -495,7 +497,7 @@ $('#btnGuardarClienteUpd').click(function() {
 			departamentoCasa: $("#slpDepartamentosUpd option:contains('"+$('#divDepartamentosUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
 			provinciaCasa: $("#slpProvinciasUpd option:contains('"+$('#idProvinciasUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
 			distritoCasa: $("#slpDistritosUpd option:contains('"+$('#idDistritosUpd .dropdown-toggle').attr('title')+"')").attr('data-tokens'),
-			esCasa: $('#chkDireccionUpd').is('checked'),
+			esCasa: $('#chkDireccionUpd').prop('checked'),
 			negocioId: $('#divDireccionNegocioUpd').attr('data-id'),
 			calleNeg: $("#slpCallesNegUpd option:contains('"+$('#divCallesNegUpd .dropdown-toggle').attr('title')+"')").val(),
 			direccionNeg: $('#txtDireccionNegocioUpd').val(),
@@ -509,6 +511,10 @@ $('#btnGuardarClienteUpd').click(function() {
 			celRefencia: $('#txtCelReferenciaUpd').val()
 
 		}
+		$.ajax({url: 'php/updateCliente.php', type: 'POST', data: { jcCliente = jClienteupd }}).done(function(resp) {
+			console.log(resp)
+		});
+		console.log(jClienteupd);
 	}
 });
 // $('.soloNumeros').on('input', function () {

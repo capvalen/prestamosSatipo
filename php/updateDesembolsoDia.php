@@ -75,10 +75,16 @@ switch ($modo){
 	$rowPrimera=$resultadoPrimera->fetch_assoc();
 	
 	$fechaAnterior = new DateTime($rowPrimera['cuotFechaPago']);
+	//echo $fecha->diff($fechaAnterior)->format('%R%a')."\n";//"calc ". $rowPrimera['cuotFechaPago'].;
 	if( $fecha->diff($fechaAnterior)->format('%R%a')>0){
 		$fecha = $fechaAnterior;
 	}else{
-		$fecha = new DateTime($fechaAnterior->add($intervalo)->format('Y-m').'-01');
+		$fechaAnterior = new DateTime();
+		if( $modo==3 ){
+			$fecha = new DateTime($fechaAnterior->add($intervalo)->format('Y-m').'-01');
+		}else{
+			$fecha = new DateTime($fechaAnterior->add($intervalo)->format('Y-m-d'));
+		}
 	}
 	
 //}
