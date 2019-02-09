@@ -41,7 +41,7 @@ $base58 = new StephenHill\Base58();?>
 			<h2 class="purple-text text-lighten-1"><i class="icofont-users"></i> Zona clientes</h2><hr>
 			
 			<button class="btn btn-infocat btn-outline btnSinBorde" id="btnAddClientes"><i class="icofont-ui-add"></i> Nuevo cliente</button>
-		<? if( isset($_GET['idCliente']) && in_array($_COOKIE['ckidUsuario'], $soloDios)){ ?>
+		<? if( isset($_GET['idCliente']) && in_array($_COOKIE['ckPower'], $soloDios)){ ?>
 			<button class="btn btn-dark btn-outline btnSinBorde" id="btnEditClientes"><i class="icofont-edit"></i> Editar cliente</button>
 		<? } ?>
 			<div class="form-inline hidden">
@@ -179,7 +179,7 @@ $base58 = new StephenHill\Base58();?>
 	</div>
 </div>
 
-<? if( isset($_GET['idCliente']) && in_array($_COOKIE['ckidUsuario'], $soloDios)){?>
+<? if( isset($_GET['idCliente']) && in_array($_COOKIE['ckPower'], $soloDios)){?>
 <!-- Modal para Crear un edit cliente  -->
 <div class="modal fade" id="modalEditCliente" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 <div class="modal-dialog modal-lg" role="document">
@@ -480,7 +480,7 @@ $('#btnGuardarClienteUpd').click(function() {
 		var hijos =0;
 		if( $('#txtNumHijosUpd').val()=='' ){hijos = $('#txtNumHijosUpd').val();}
 		var jClienteupd = {
-			idCliente: <?= $idCli;?>,
+			idCliente: <?php if(isset($_GET['idCliente'])){ echo $idCli;}else{ echo '""';}?>,
 			dni: $('#txtDniClienteUpd').val(),
 			apellidoPaterno: $('#txtPaternoClienteUpd').val(),
 			apellidoMaterno: $('#txtMaternoClienteUpd').val(),
@@ -511,10 +511,11 @@ $('#btnGuardarClienteUpd').click(function() {
 			celRefencia: $('#txtCelReferenciaUpd').val()
 
 		}
-		$.ajax({url: 'php/updateCliente.php', type: 'POST', data: { jcCliente = jClienteupd }}).done(function(resp) {
+		$.ajax({url: 'php/updateCliente.php', type: 'POST', data: { jcCliente: jClienteupd }}).done(function(resp) {
 			console.log(resp)
+			location.reload();
 		});
-		console.log(jClienteupd);
+		//console.log(jClienteupd);
 	}
 });
 // $('.soloNumeros').on('input', function () {

@@ -2,21 +2,20 @@
 header('Content-Type: text/html; charset=utf8');
 include 'conkarl.php';
 
-var_dump($_POST['jcCliente']);
-// $idCli= $_POST['idCli'];
+//var_dump($_POST['jcCliente']['idCliente']);
+$idCli= $_POST['jcCliente']['idCliente'];
 
-// $sql= "UPDATE `cliente` SET 
-// `cliDni`={$_POST['dni']},`cliNombres`={$_POST['nombres']},`cliApellidoPaterno`={$_POST['apellidoPaterno']},`cliApellidoMaterno`={$_POST['apellidoMaterno']},
-// `cliSexo`={$_POST['sexo']},`cliNumHijos`={$_POST['hijos']},
-// `cliDireccionesIgual`={$_POST['esCasa']},
-// `cliCelularPersonal`={$_POST['celPersonal']},`cliCelularReferencia`={$_POST['celRefencia']},`idEstadoCivil`={$_POST['estadocivil']}
-// WHERE `idCliente`= {$idCli};";
-// echo $sql;
+$sql= "UPDATE `cliente` SET 
+`cliDni`='{$_POST['jcCliente']['dni']}', `cliNombres`='{$_POST['jcCliente']['nombres']}', `cliApellidoPaterno`='{$_POST['jcCliente']['apellidoPaterno']}', `cliApellidoMaterno`='{$_POST['jcCliente']['apellidoMaterno']}',
+`cliSexo`={$_POST['jcCliente']['sexo']},`cliNumHijos`={$_POST['jcCliente']['hijos']},
+`cliDireccionesIgual`={$_POST['jcCliente']['esCasa']},
+`cliCelularPersonal`='{$_POST['jcCliente']['celPersonal']}', `cliCelularReferencia`='{$_POST['jcCliente']['celRefencia']}',`idEstadoCivil`={$_POST['jcCliente']['estadocivil']}
+WHERE `idCliente`= {$idCli};";
+//echo $sql;
 
-// if ($conection->query($sql)) { //Ejecución mas compleja con retorno de dato de sql del procedure.
-// 	/* obtener el array de objetos */
-// 	echo true;
-// }else{echo false;}
+if ($conection->query($sql)) { 
+	echo true;
+}else{echo false;}
 
 
 ?>

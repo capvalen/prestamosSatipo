@@ -6,7 +6,7 @@ require_once('../vendor/autoload.php');
 $base58 = new StephenHill\Base58();
 
 $pagoTotal = $_POST['monto']*(1+$_POST['tasaInt']/100);
-$sql="INSERT INTO `prestamo`(`idPrestamo`, `presFechaAutom`, `presFechaDesembolso`, `presPeriodo`, `preInteresPers`,`presMontoDesembolso`, `idTipoPrestamo`, `presActivo`, `idUsuario`, `preSaldoDebe`) VALUES (null, now(), {$_POST['fDesembolso']}, {$_POST['periodo']}, {$_POST['tasaInt']},{$_POST['monto']}, {$_POST['modo']}, 1, {$_COOKIE['ckidUsuario']}, {$pagoTotal});";
+$sql="INSERT INTO `prestamo`(`idPrestamo`, `presFechaAutom`, `presFechaDesembolso`, `presPeriodo`, `preInteresPers`,`presMontoDesembolso`, `idTipoPrestamo`, `presActivo`, `idUsuario`, `preSaldoDebe`, `prendaSimple`) VALUES (null, now(), {$_POST['fDesembolso']}, {$_POST['periodo']}, {$_POST['tasaInt']},{$_POST['monto']}, {$_POST['modo']}, 1, {$_COOKIE['ckidUsuario']}, {$pagoTotal}, '{$_POST['prendaSimple']}');";
 
 if($conection->query($sql)){
 	//$row = mysqli_fetch_array($log, MYSQLI_ASSOC);

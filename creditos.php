@@ -60,7 +60,7 @@ $fechaHoy = new DateTime();
 	<?php
 
 	$sqlCr="SELECT presFechaAutom, presMontoDesembolso, presPeriodo, tpr.tpreDescipcion,
-	u.usuNombres, preInteresPers,
+	u.usuNombres, preInteresPers, prendaSimple,
 	case presFechaDesembolso when '0000-00-00 00:00:00' then 'Desembolso pendiente' else presFechaDesembolso end as `presFechaDesembolso`,
 	case presAprobado when 0 then 'Sin aprobar' when 2 then 'Rechazado' else 'Aprobado' end as `presAprobado`, 
 	case when ua.usuNombres is Null then '-' else ua.usuNombres end  as `usuarioAprobador`, pre.idTipoPrestamo
@@ -93,6 +93,7 @@ $fechaHoy = new DateTime();
 			<div class="row">
 				<div class="col-sm-2"><label for="">Verificación</label><p><?= $rowCr['presAprobado']; ?></p></div>
 				<div class="col-sm-2"><label for="">Verificador</label><p><?= $rowCr['usuarioAprobador']; ?></p></div>
+				<div class="col-sm-2"><label for="">Prenda</label><p class="mayuscula"><?= $rowCr['prendaSimple']; ?></p></div>
 			</div>
 			<div class="row">
 				<div class="col-sm-2"><label for="">Fecha préstamo</label><p><?php $fechaAut= new DateTime($rowCr['presFechaAutom']); echo $fechaAut->format('j/m/Y h:m a'); ?></p></div>
@@ -359,8 +360,12 @@ $fechaHoy = new DateTime();
 							<label for="">Fecha primer pago</label>
 							<input type="text" id="dtpFechaPrimerv3" class="form-control text-center" placeholder="Fecha para controlar citas" autocomplete="off">
 						</div>
+						<div class="col-xs-6 col-sm-4">
+							<label for="">¿Alguna prenda?</label>
+							<input type="text" id="txtPrendaSimple" class="form-control" placeholder="Rellene si hay algùn item prendario" autocomplete="off">
+						</div>
 						
-						<div class="col-xs-6 col-sm-3">
+						<div class="col-xs-5">
 							<button class="btn btn-azul btn-lg btn-outline btnSinBorde" style="margin-top: 10px;" id="btnSimularPagos"><i class="icofont-support-faq"></i> Simular</button>
 							<button class="btn btn-infocat btn-lg btn-outline btnSinBorde" style="margin-top: 10px;" id="btnGuardarCred"><i class="icofont-save"></i> Guardar</button>
 						
@@ -412,7 +417,7 @@ $fechaHoy = new DateTime();
 </div></div>
 <!-- /#page-content-wrapper -->
 </div><!-- /#wrapper -->
-    
+	
 
 <!-- Modal para mostrar los clientes coincidentes -->
 <div class="modal fade" id="mostrarResultadosClientes" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
@@ -718,7 +723,8 @@ $('#btnGuardarCred').click(function() {
 			monto: $('#txtMontoPrinc').val(),
 			tasaInt: $('#txtInteres').val(),
 			fDesembolso: moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
-			primerPago: moment($('#dtpFechaPrimerv3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD')
+			primerPago: moment($('#dtpFechaPrimerv3').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+			prendaSimple: $('#txtPrendaSimple').val()
 		}}).done(function(resp) {
 			console.log(resp)
 			if( parseInt(resp)>0 ){

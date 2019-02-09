@@ -49,17 +49,18 @@ a:focus, a:hover { color: #62286f; }
 			<div class="container-fluid  ">
 				<p class="pheader col-xs-7"><i class="icofont icofont-filter"></i> Filtros</p>
 				<div class="panel panel-default container-fluid ">
-					<div class=" col-xs-12 col-sm-7 ">
-						<div style="padding: 10px;">
-							<p style="color: #a35bb4;">Por: <?php require "php/historialCierres.php"; ?></p>
-							<!-- <p style="color: #a35bb4;">Fecha: <strong id="strFechaAhora"></strong></p> -->
-						</div>
+				<div class="col-xs-12 col-sm-5">
+					<p style="color: #a35bb4;"><strong>Seleccione fecha de reporte:</strong></p>
+						<input type="text" id="dtpFechaIniciov3" class="form-control text-center" placeholder="Fecha para controlar citas">
+					<!--<div class="sandbox-container"><input id="dtpFechaIniciov3" type="text" class="form-control text-center inputConIco" placeholder="" style="color: #a35bb4;" autocomplete="off"> <span class="icoTransparent"><i class="icofont icofont-caret-down"></i></span></div> -->
+				</div>
+				<div class=" col-xs-12 col-sm-7 ">
+					<div style="padding: 10px;">
+						<p style="color: #a35bb4;">Por: <?php require "php/historialCierres.php"; ?></p>
+						<!-- <p style="color: #a35bb4;">Fecha: <strong id="strFechaAhora"></strong></p> -->
 					</div>
-					<div class="col-xs-12 col-sm-5">
-						<p style="color: #a35bb4;"><strong>Seleccione fecha de reporte:</strong></p>
-							<input type="text" id="dtpFechaIniciov3" class="form-control text-center" placeholder="Fecha para controlar citas">
-						<!--<div class="sandbox-container"><input id="dtpFechaIniciov3" type="text" class="form-control text-center inputConIco" placeholder="" style="color: #a35bb4;" autocomplete="off"> <span class="icoTransparent"><i class="icofont icofont-caret-down"></i></span></div> -->
-					</div>
+				</div>
+					
 				</div>
 			</div>
 	
