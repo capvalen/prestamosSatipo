@@ -10,7 +10,7 @@ $sumaTodo=0; $sumaRecup =0; $sumaGananc=0;
 
 switch ($_POST['caso']) {
 	case 'R1':
-		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso  FROM `caja` c inner join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso where cajaFecha between '{$_POST['fInicio']} 00:00' and '{$_POST['fFinal']} 23:59:59' and c.idTipoProceso in (81, 80, 33) and cajaActivo = 1 order by idPrestamo;";
+		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso  FROM `caja` c left join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso where cajaFecha between '{$_POST['fInicio']} 00:00' and '{$_POST['fFinal']} 23:59:59' and c.idTipoProceso in (31, 81, 80, 33) and cajaActivo = 1 order by idPrestamo;";
 		
 		$resultado=$cadena->query($sql);
 		?> 
@@ -76,7 +76,7 @@ switch ($_POST['caso']) {
 
 
 		case 'R2':
-		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso  FROM `caja` c inner join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso where cajaFecha between '{$_POST['fInicio']} 00:00' and '{$_POST['fFinal']} 23:59:59' and c.idTipoProceso in (43) and cajaActivo = 1 order by idPrestamo;";
+		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso, cajaObservacion  FROM `caja` c left join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso where cajaFecha between '{$_POST['fInicio']} 00:00' and '{$_POST['fFinal']} 23:59:59' and c.idTipoProceso in (43,85,84,83,82,40,41) and cajaActivo = 1 order by idPrestamo;";
 		
 		$resultado=$cadena->query($sql);
 		?> 
@@ -94,7 +94,7 @@ switch ($_POST['caso']) {
 		$sumaTodo = $sumaTodo + $row['cajaValor']; ?>
 			<tr>
 				<td><a href="creditos.php?credito=<?= $base58->encode($row['idPrestamo']);?>">CR-<?= $row['idPrestamo'];?></a></td>
-				<td><?= $row['tipoDescripcion']?></td>
+				<td><?= $row['tipoDescripcion']?> <? if($row['cajaObservacion']<>''){echo '<span class="mayucula">«'.$row['cajaObservacion'].'»</span>';}?></td>
 				<td>S/ <?= number_format($row['cajaValor'],2);?></td>
 			</tr>
 <? } //end de while ?> 
