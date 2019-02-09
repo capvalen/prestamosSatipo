@@ -508,6 +508,20 @@ $('#btnUpdateCajaMaestra').click(function() {
 		}
 	});
 });
+$('.btnPrintCajaEsp').click(function(){
+	var padre = $(this).parent().parent();
+
+	var tipo = padre.find('.tpIdDescripcion').text();
+	var monto = padre.find('.spanCantv3').text();
+	var obs = padre.find('.tdObservacion').text();
+	var fecha = moment().format('DD/MM/YYYY hh:mm a');
+	var moneda = padre.find('.tdMoneda').text();
+	var codigo = padre.find('.aCode').text();
+
+	var dataUrl="php/printComprobante.php?tipo="+tipo+"&monto="+monto+"&obs="+obs+"&fecha="+fecha+"&moneda="+moneda+"&codigo="+codigo;
+	window.open(dataUrl, '_blank' );
+});
+
 <?php } ?>
 
 

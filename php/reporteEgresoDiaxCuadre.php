@@ -20,10 +20,10 @@ if($totalRow==0){
 		$sumaIngr+=floatval($row['pagoMonto']);
 		if($row['idPrestamo']<>0){$codTemp= $base58->encode('00'.$row['idPrestamo']);}
 
-		if($_COOKIE['ckPower']==1 || $_COOKIE['ckPower']==8): $boton = "<button class='btn btn-sm btn-negro btn-outline btnEditarCajaMaestra'><i class='icofont icofont-edit'></i></button>"; else: $boton=''; endif;?>
+		if($_COOKIE['ckPower']==1 || $_COOKIE['ckPower']==8): $boton = "<button class='btn btn-sm btn-negro btn-outline btnEditarCajaMaestra'><i class='icofont icofont-edit'></i></button> <button class='btn btn-sm btn-azul btn-outline btnPrintCajaEsp' data-caja='{$row["idCaja"]}'><i class='icofont icofont-print'></i></button> "; else: $boton=''; endif;?>
 
 		<tr data-id="<?= $row['idCaja']; ?>" data-activo="<?= $row['cajaActivo']; ?>">
-			<th scope='row'><a href="<? if($row['idPrestamo']<>0){ echo 'creditos.php?credito='.$codTemp;}?>"><? if($row['idPrestamo']<>0){ echo 'CR-0'.$row['idPrestamo'];}?></a> </th>
+			<th scope='row' class="aCode"><a href="<? if($row['idPrestamo']<>0){ echo 'creditos.php?credito='.$codTemp;}?>"><? if($row['idPrestamo']<>0){ echo 'CR-0'.$row['idPrestamo'];}?></a> </th>
 			<td class='mayuscula tpIdDescripcion'><?= $row['tipoDescripcion'];?></td> <td><i class="icofont icofont-bubble-right"></i> <em><?= $row['usuNick'];?></em></td> <td>S/ <span class='spanCantv3'><?= $row['pagoMonto'];?></span></td>  <td class='mayuscula tdMoneda' data-id="<?= $row['cajaMoneda'];?>"><?= $row['moneDescripcion'];?></td> <td class='mayuscula tdObservacion'><?= $row['cajaObservacion'];?></td> <td><span class="sr-only fechaPagov3"><?= $row['cajaFecha'];  ?></span> <?= $boton;?></td> </tr>
 		<?php 
 		if($totalRow==$i){
