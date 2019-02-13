@@ -6,6 +6,7 @@ $hayCaja= require_once("comprobarCajaHoy.php");
 $filas=array();
 if (! isset($_GET['fecha'])) { //si existe lista fecha requerida
 	$_GET['fecha']=date('Y-m-d');
+	
 }
 if(isset($_GET['cuadre'])){
 	$sql= mysqli_query($conection,"SELECT cu.*, u.usuNombres FROM `cuadre` cu
