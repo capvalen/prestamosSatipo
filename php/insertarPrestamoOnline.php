@@ -6,12 +6,11 @@ require_once('../vendor/autoload.php');
 $base58 = new StephenHill\Base58();
 
 $pagoTotal = $_POST['monto']*(1+$_POST['tasaInt']/100);
-$sql="INSERT INTO `prestamo`(`idPrestamo`, `presFechaAutom`, `presFechaDesembolso`, `presPeriodo`, `preInteresPers`,`presMontoDesembolso`, `idTipoPrestamo`, `presActivo`, `idUsuario`, `preSaldoDebe`, `prendaSimple`) VALUES (null, now(), {$_POST['fDesembolso']}, {$_POST['periodo']}, {$_POST['tasaInt']},{$_POST['monto']}, {$_POST['modo']}, 1, {$_COOKIE['ckidUsuario']}, {$pagoTotal}, '{$_POST['prendaSimple']}');";
+$sql="INSERT INTO `prestamo`(`idPrestamo`, `presFechaAutom`, `presFechaDesembolso`, `presPeriodo`, `preInteresPers`,`presMontoDesembolso`, `idTipoPrestamo`, `presActivo`, `idUsuario`, `preSaldoDebe`, `prendaSimple`) VALUES (null, now(), '0000-00-00', {$_POST['periodo']}, {$_POST['tasaInt']},{$_POST['monto']}, {$_POST['modo']}, 1, {$_COOKIE['ckidUsuario']}, {$pagoTotal}, '{$_POST['prendaSimple']}');"; 
+
 
 if($conection->query($sql)){
-	//$row = mysqli_fetch_array($log, MYSQLI_ASSOC);
 	$idPrestamo = $conection->insert_id;
-	
 }else{
 	echo "hubo un error";
 }
@@ -156,18 +155,19 @@ for ($j=0; $j <  count($jsonSimple) ; $j++) {
 	$nueva= new DateTime ($jsonSimple[$j]['fPago']);
 
 	if($jsonSimple[$j]['razon']==='Desembolso'){
-		$sqlCuotas=$sqlCuotas."INSERT INTO `prestamo_cuotas`(`idCuota`, `idPrestamo`, `cuotFechaPago`, `cuotCuota`, `cuotFechaCancelacion`, `cuotPago`, `cuotSaldo`, `cuotVo`, `cuotObservaciones`,`idTipoPrestamo`) VALUES (null,$idPrestamo,'{$nueva->format('Y-m-d')}',0,'',0,{$jsonSimple[$j]['saldoReal']},'','', 43);";
+		$sqlCuotas=$sqlCuotas."INSERT INTO `prestamo_cuotas`(`idCuota`, `idPrestamo`, `cuotFechaPago`, `cuotCuota`, `cuotFechaCancelacion`, `cuotPago`, `cuotSaldo`, `cuotVo`, `cuotObservaciones`,`idTipoPrestamo`) VALUES (null,$idPrestamo,'{$nueva->format('Y-m-d')}',0,'0000-00-00',0,{$jsonSimple[$j]['saldoReal']},'','', 43);";
 	}else if($jsonSimple[$j]['razon']==='Domingo'){ $dia++;
 	}else if($jsonSimple[$j]['razon']==='Feriado'){ $dia++;
 	}else{
 		if($j>=1){
 			$jsonSimple[$j]['saldoReal'] = $jsonSimple[$j-$dia]['saldoReal']-$jsonSimple[$j]['cuota']; $dia=1;
 		}
-		$sqlCuotas=$sqlCuotas."INSERT INTO `prestamo_cuotas`(`idCuota`, `idPrestamo`, `cuotFechaPago`, `cuotCuota`, `cuotFechaCancelacion`, `cuotPago`, `cuotSaldo`, `cuotVo`, `cuotObservaciones`,`idTipoPrestamo`) VALUES (null,$idPrestamo,'{$nueva->format('Y-m-d')}',{$jsonSimple[$j]['cuota']},'',0,{$jsonSimple[$j]['saldoReal']},'','', 79);";
+		$sqlCuotas=$sqlCuotas."INSERT INTO `prestamo_cuotas`(`idCuota`, `idPrestamo`, `cuotFechaPago`, `cuotCuota`, `cuotFechaCancelacion`, `cuotPago`, `cuotSaldo`, `cuotVo`, `cuotObservaciones`,`idTipoPrestamo`) VALUES (null,$idPrestamo,'{$nueva->format('Y-m-d')}',{$jsonSimple[$j]['cuota']},'0000-00-00',0,{$jsonSimple[$j]['saldoReal']},'','', 79);";
 	}
 
 }
 
+//echo $sqlCuotas;
 $cadena->multi_query($sqlCuotas);
 
 
