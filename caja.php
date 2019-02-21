@@ -1,6 +1,5 @@
 <?php
 date_default_timezone_set('America/Lima');
-include "php/variablesGlobales.php";
 if (!isset($_GET['fecha'])) { //si existe lista fecha requerida
 	$_GET['fecha']=date('Y-m-d');
 }
@@ -9,8 +8,9 @@ if (!isset($_GET['fecha'])) { //si existe lista fecha requerida
 <html lang="es">
 
 <head>
-	<title>Caja - Sistema Préstamos</title>
-	<?php include "headers.php"; ?>
+	<title>Caja: PeruCash</title>
+	<?php include "headers.php";
+	include "php/variablesGlobales.php"; ?>
 </head>
 
 <body>
@@ -47,25 +47,24 @@ a:focus, a:hover { color: #62286f; }
 			</div>
 
 			<div class="container-fluid  ">
-				<p class="pheader col-xs-7"><i class="icofont icofont-filter"></i> Filtros</p>
+				<p class="pheader col-xs-12"><i class="icofont icofont-filter"></i> Filtros</p>
 				<div class="panel panel-default container-fluid ">
-				<div class="col-xs-12 col-sm-5">
-					<p style="color: #a35bb4;"><strong>Seleccione fecha de reporte:</strong></p>
-						<input type="text" id="dtpFechaIniciov3" class="form-control text-center" placeholder="Fecha para controlar citas">
-					<!--<div class="sandbox-container"><input id="dtpFechaIniciov3" type="text" class="form-control text-center inputConIco" placeholder="" style="color: #a35bb4;" autocomplete="off"> <span class="icoTransparent"><i class="icofont icofont-caret-down"></i></span></div> -->
-				</div>
-				<div class=" col-xs-12 col-sm-7 ">
-					<div style="padding: 10px;">
-						<p style="color: #a35bb4;">Por: <?php require "php/historialCierres.php"; ?></p>
-						<!-- <p style="color: #a35bb4;">Fecha: <strong id="strFechaAhora"></strong></p> -->
+					<div class="col-xs-12 col-sm-6 col-md-3">
+						<p style="color: #a35bb4;"><strong>Seleccione fecha de reporte:</strong></p>
+							<input type="text" id="dtpFechaIniciov3" class="form-control text-center" placeholder="Fecha para controlar citas">
+						<!--<div class="sandbox-container"><input id="dtpFechaIniciov3" type="text" class="form-control text-center inputConIco" placeholder="" style="color: #a35bb4;" autocomplete="off"> <span class="icoTransparent"><i class="icofont icofont-caret-down"></i></span></div> -->
 					</div>
-				</div>
-					
+					<div class=" col-xs-12 col-sm-6 col-md-4">
+						<div>
+              <p style="color: #a35bb4;"><strong>Por:</strong> </p> <?php require "php/historialCierres.php"; ?>
+							<!-- <p style="color: #a35bb4;">Fecha: <strong id="strFechaAhora"></strong></p> -->
+						</div>
+					</div>
 				</div>
 			</div>
 	
 			<div class="container-fluid">
-					<p class="pheader col-xs-7"><i class="icofont icofont-hard-disk"></i> Datos del cuadre</p>
+					<p class="pheader col-xs-12"><i class="icofont icofont-hard-disk"></i> Datos del cuadre</p>
 					<div class="panel panel-default container-fluid" style="padding: 18px 0;">
 						<!-- <div class="col-xs-12 col-sm-6 text-center">
 							<button class="btn btn-azul btn-outline btn-lg" id="btnCajaAbrir"><i class="icofont icofont-coins"></i> Aperturar Caja</button>
@@ -84,7 +83,7 @@ a:focus, a:hover { color: #62286f; }
 					<?php 
 					if(date('Y-m-d')==$_GET['fecha']){ ?>
 						<div class="dropdown">
-							<button class="btn btn-default dropdown-toggle pull-right " type="button" id="dropdownEntradas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="margin-top: -37px; color: #a35bb4;"><i class="icofont-ui-rate-add"></i> <span class="caret"></span></button>
+							<button class="btn btn-default dropdown-toggle pull-right " type="button" id="dropdownEntradas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="margin-top: -37px; color: #a35bb4;"><i class="icofont icofont-ui-rate-add"></i> <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownEntradas">
 								<?php include "php/omitidasEntradasLI.php"; ?>
 							</ul>
@@ -93,7 +92,7 @@ a:focus, a:hover { color: #62286f; }
 				</div>
 				
 				<div class=" panel panel-default" id="divEntradas">
-					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Motivo de ingreso</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th> <th>Obs.</th> </tr> </thead>
+					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Producto</th> <th>Motivo de ingreso</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th> <th>Obs.</th> </tr> </thead>
 					<tbody>
 					<?php
 					if( ! isset($_GET['cuadre']) ):
@@ -112,7 +111,7 @@ a:focus, a:hover { color: #62286f; }
 					<?php 
 					if(date('Y-m-d')==$_GET['fecha']){ ?>
 						<div class="dropdown">
-							<button class="btn btn-default dropdown-toggle pull-right " type="button" id="dropdownEntradas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="margin-top: -37px; color: #a35bb4;"><i class="icofont-ui-rate-remove"></i> <span class="caret"></span></button>
+							<button class="btn btn-default dropdown-toggle pull-right " type="button" id="dropdownEntradas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="margin-top: -37px; color: #a35bb4;"><i class="icofont icofont-ui-rate-remove"></i> <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownEntradas">
 								<?php include "php/omitidasSalidasLI.php"; ?>
 							</ul>
@@ -120,7 +119,7 @@ a:focus, a:hover { color: #62286f; }
 					<?php } ?>
 				</div>
 				<div class=" panel panel-default " id="divSalidas">
-					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Motivo de egreso</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th> <th>Obs.</th> </tr> </thead>
+					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Producto</th> <th>Motivo de egreso</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th> <th>Obs.</th> </tr> </thead>
 					<tbody>
 					<?php
 						if( ! isset($_GET['cuadre']) ):
@@ -133,15 +132,35 @@ a:focus, a:hover { color: #62286f; }
 					</tbody> </table>
 				</div>
 			</div>
-			<div class="container-fluid col-xs-12 text-center">
-				<h4 class="pheader">Efectivo total del día: <strong>S/ <span id="spanResultadoFinal"></span></strong></h4>
+			<div class="container-fluid col-xs-12">
+				<div class="pheader"><h4><i class="icofont icofont-fax"></i> Resumen <strong> <span id="spanResultadoFinal"></span></strong></h4></div>
+				<div class="panel panel-default">
+					<div class="container-fluid" style="padding:20px;">
+						<p class=""><strong>Apertura:</strong> S/ <span id="spanAperturaDia"></span></p>
+						<hr>
+						<p class=""><strong>*** Entradas ***</strong></p>
+						<p class=""><strong>Efectivo:</strong> S/ <span id="spanAperturaEfectivo"></span></p>
+						<p class=""><strong>Tarjetas:</strong>  S/ <span id="spanAperturaTarjetas"></span></p>
+						<p class=""><strong>Depósitos bancarios:</strong>  S/ <span id="spanAperturaBancos"></span></p>
+						<hr>
+						<p class=""><strong>*** Salidas ***</strong></p>
+						<p class=""><strong>Efectivo:</strong>  S/ <span id="spanCierreEfectivo"></span></p>
+						<p class=""><strong>Tarjetas:</strong>  S/ <span id="spanCierreTarjetas"></span></p>
+						<p class=""><strong>Depósitos bancarios:</strong>  S/ <span id="spanCierreBancos"></span></p>
+						<hr>
+						<p class=""><strong>Cierre Efectivo Manual:</strong>  S/ <span id="spanTotalEfectivo"></span></p>
+						<p class=""><strong>Cierre Efectivo Sistema:</strong>  S/ <span id="spanTotalSistema"></span></p>
+						<hr>
+						<p class=""><strong>Resumen: <span id="spanSobra"></span> </strong></p>
+					</div>
+				</div>
+				
 			</div>
 	<?php endif; //if de isset ?>
 			<!-- Fin de contenido 2 -->
-			</div>
-
-        </div>
-    </div>    
+			</div> <!-- col-lg-12 contenedorDeslizable -->
+    </div><!-- row noselect -->
+    </div> <!-- container-fluid -->
 </div><!-- /#page-content-wrapper -->
 </div><!-- /#wrapper -->
 
@@ -231,6 +250,58 @@ a:focus, a:hover { color: #62286f; }
 	</div>
 </div>
 </div>
+
+<!-- Modal para Cambiar entrada de caja  -->
+<div class="modal fade" id="modalCambiarEntradaCaja" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal-dialog modal-sm" role="document">
+	<div class="modal-content">
+		<div class="modal-header-warning">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"><i class="icofont icofont-animal-cat-alt-4"></i> Cambiar apertura de caja</h4>
+		</div>
+		<div class="modal-body">
+			<div class="container-fluid">
+			<div class="row">
+				<p>¿Qué monto deseas poner en la apertura?</p>
+				<input type="number" class="form-control input-lg text-center esDecimal inputGrande" id="txtMontoChangeApertura" value="0.00">
+				<p>¿Alguna observación extra?</p>
+				<input type="text" class="form-control input-lg text-center mayuscula" id="txtObsChangeApertura" autocomplete="off">
+			</div>
+		</div>
+		<div class="divError text-left hidden"><i class="icofont icofont-animal-cat-alt-4"></i> Lo sentimos, <span class="spanError"></span></div>	<br>
+		<div class="modal-footer">
+			<button class="btn btn-warning btn-outline" id="btnUpdateApertura"><i class="icofont icofont-save"></i> Actualizar</button>
+		</div>
+	</div>
+	</div>
+</div>
+</div>
+
+<!-- Modal para Cambiar salida de caja  -->
+<div class="modal fade" id="modalCambiarSalidaCaja" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal-dialog modal-sm" role="document">
+	<div class="modal-content">
+		<div class="modal-header-warning">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"><i class="icofont icofont-animal-cat-alt-4"></i> Cambiar cierre de caja</h4>
+		</div>
+		<div class="modal-body">
+			<div class="container-fluid">
+			<div class="row">
+				<p>¿Qué monto deseas poner en el cierre?</p>
+				<input type="number" class="form-control input-lg text-center esDecimal inputGrande" id="txtMontoChangeCierre" value="0.00">
+				<p>¿Alguna observación extra?</p>
+				<input type="text" class="form-control input-lg text-center mayuscula" id="txtObsChangeCierre" autocomplete="off">
+			</div>
+		</div>
+		<div class="divError text-left hidden"><i class="icofont icofont-animal-cat-alt-4"></i> Lo sentimos, <span class="spanError"></span></div>	<br>
+		<div class="modal-footer">
+			<button class="btn btn-warning btn-outline" id="btnUpdateCierre"><i class="icofont icofont-save"></i> Actualizar</button>
+		</div>
+	</div>
+	</div>
+</div>
+</div>
 <!--Modal Para insertar pago maestro -->
 <div class="modal fade modal-cajaMaestra" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-sm">
@@ -281,7 +352,7 @@ a:focus, a:hover { color: #62286f; }
 </div>
 <?php } ?>
 
-<?php include 'footer.php'; ?>
+<?php include 'footer.php';?>
 <script type="text/javascript" src="js/moment-precise-range.js"></script>
 <script type="text/javascript" src="js/bootstrap-material-datetimepicker.js?version=2.0.8"></script>
 <?php include 'php/modals.php'; ?>
@@ -305,8 +376,52 @@ $('#dtpFechaIniciov3').val('<?php
 		}
 		?>');
 moment.locale('es');
+<? if(isset($_GET['cuadre'])){ ?>
+calculoTicketVirtual();
 
-$('#spanResultadoFinal').text(parseFloat( parseFloat($('#strSumaEntrada').text().replace(',', '.')) - parseFloat($('#strSumaSalida').text().replace(',', '.')) + parseFloat($('#spanApertura').text().replace(',', '.')) ).toFixed(2));
+function calculoTicketVirtual() {
+
+	var apertura = parseFloat($('#spanApertura').text().replace(',', '.'));
+	var cierre = parseFloat($('#spanCierrev3').text().replace(',', '.'));
+	var cuadre =0, sobra =0;
+
+	var efectivosEntrada = parseFloat($('#strSumaEntrada').attr('data-efectivo').replace(',', '.'));
+	var tarjetasEntrada = parseFloat($('#strSumaEntrada').attr('data-tarjeta').replace(',', '.'));
+	var bancosEntrada = parseFloat($('#strSumaEntrada').attr('data-banco').replace(',', '.'));
+
+	var efectivosSalida = parseFloat($('#strSumaSalida').attr('data-efectivo').replace(',', '.'));
+	var tarjetasSalida = parseFloat($('#strSumaSalida').attr('data-tarjeta').replace(',', '.'));
+	var bancosSalida = parseFloat($('#strSumaSalida').attr('data-banco').replace(',', '.'));
+
+	$('#spanAperturaDia').text(apertura.toFixed(2));
+
+	$('#spanAperturaEfectivo').text(efectivosEntrada.toFixed(2));
+	$('#spanAperturaTarjetas').text(tarjetasEntrada.toFixed(2));
+	$('#spanAperturaBancos').text(bancosEntrada.toFixed(2));
+
+	$('#spanCierreEfectivo').text(efectivosSalida.toFixed(2));
+	$('#spanCierreTarjetas').text(tarjetasSalida.toFixed(2));
+	$('#spanCierreBancos').text(bancosSalida.toFixed(2));
+	
+
+	cuadre = parseFloat(apertura+efectivosEntrada-efectivosSalida-tarjetasSalida).toFixed(2);
+	sobra = parseFloat(cuadre-cierre);
+	$('#spanTotalEfectivo').text(cierre.toFixed(2));
+	$('#spanTotalSistema').text( cuadre);
+	
+	if(sobra ==0){
+		$('#spanSobra').text('Cuadre exacto');
+	}
+	if(sobra <0){
+		$('#spanSobra').text('Falta S/ '+ (0-sobra).toFixed(2));		
+	}
+	if(sobra > 0){
+		$('#spanSobra').text('Sobra S/ '+ sobra.toFixed(2));		
+	}
+	
+	//$('#spanResultadoFinal').text(parseFloat( parseFloat($('#strSumaEntrada').text().replace(',', '.')) - parseFloat($('#strSumaSalida').text().replace(',', '.')) + parseFloat($('#spanApertura').text().replace(',', '.')) ).toFixed(2));
+}
+<? } ?>
 
 <?php if(isset($_GET['cuadre'])){ ?>
 	$('#sltHistorialCierres').val(<?php echo $_GET['cuadre']; ?>);
@@ -457,8 +572,7 @@ $('.aLiProcesos').click(function() {
 $(".modal-pagoMaestro").on("shown.bs.modal", function () { $('#txtMontoPagos').val('0.00').focus(); });
 <?php if($_COOKIE['ckPower']==1 || $_COOKIE['ckPower']==8 || $_COOKIE['ckPower']==4) { ?>
 $('#btnInsertPagoOmiso').click(()=> {
-	var idMoneda= $('#divCmbMetodoPago .optMoneda:contains("'+$('#sltMetodopago').val()+'")').attr('data-tokens');
-	
+	var idMoneda= $('#divCmbMetodoPago').find('.selected a').attr('data-tokens');
 	if(idMoneda == null ){
 		$('.modal-pagoMaestro .divError').removeClass('hidden').find('.spanError').text('Debes seleccionar un método de pago primero');
 	}else{
@@ -490,8 +604,8 @@ $('.btnEditarCajaMaestra').click(function() {
 	$('.modal-cajaMaestra').modal('show');
 });
 $('#btnUpdateCajaMaestra').click(function() {
-	var idProc= $('#cmbEstadoPagos2 .optPagos:contains("'+$('#spTipoPago2').val()+'")').attr('data-tokens');
-	var mone = $('#divCmbMetodoPago2 .optMoneda:contains("'+$('#sltMetodopago2').val()+'")').attr('data-tokens');
+	var idProc= $('#cmbEstadoPagos2').find('.selected a').attr('data-tokens');
+	var mone = $('#divCmbMetodoPago2').find('.selected a').attr('data-tokens');
 	var padre = $(this).parent().parent();
 	$.ajax({url: 'php/actualizarCaja.php', type: 'POST', data: { 
 		idCaj: $('#btnUpdateCajaMaestra').attr('data-caja'),
@@ -508,21 +622,42 @@ $('#btnUpdateCajaMaestra').click(function() {
 		}
 	});
 });
-$('.btnPrintCajaEsp').click(function(){
-	var padre = $(this).parent().parent();
 
-	var tipo = padre.find('.tpIdDescripcion').text();
-	var monto = padre.find('.spanCantv3').text();
-	var obs = padre.find('.tdObservacion').text();
-	var fecha = moment().format('DD/MM/YYYY hh:mm a');
-	var moneda = padre.find('.tdMoneda').text();
-	var codigo = padre.find('.aCode').text();
-
-	var dataUrl="php/printComprobante.php?tipo="+tipo+"&monto="+monto+"&obs="+obs+"&fecha="+fecha+"&moneda="+moneda+"&codigo="+codigo;
-	window.open(dataUrl, '_blank' );
+<?php }
+if( in_array( $_COOKIE['ckPower'], $soloDios)){ ?>
+$('#btnCambiarApertura').click(function() {
+	$('#txtMontoChangeApertura').val( $('#spanApertura').text());
+	$('#modalCambiarEntradaCaja').modal('show');
 });
-
+$('#btnCambiarCierre').click(function() {
+	$('#txtMontoChangeCierre').val( $('#spanCierrev3').text());
+	$('#modalCambiarSalidaCaja').modal('show');
+});
+$('#btnUpdateApertura').click(function() {
+	pantallaOver(true);
+	if( $('#txtMontoChangeApertura').val()>=0 ){
+		$.ajax({url: 'php/updateAperturaCaja.php', type: 'POST', data: { cuadre: '<? if(isset($_GET["cuadre"])){ echo $_GET["cuadre"]; }else{ echo ""; } ?>', nueVal: $('#txtMontoChangeApertura').val(), nueObs: $('#txtObsChangeApertura').val() }}).done(function(resp) {
+			if(resp!='-1'){
+				location.reload();
+				pantallaOver(false);
+			}
+		});
+	}
+});
+$('#btnUpdateCierre').click(function() {
+	pantallaOver(true);
+	if( $('#txtMontoChangeCierre').val()>=0 ){
+		$.ajax({url: 'php/updateCierreCaja.php', type: 'POST', data: { cuadre: '<? if(isset($_GET["cuadre"])){ echo $_GET["cuadre"]; }else{ echo ""; } ?>', nueVal: $('#txtMontoChangeCierre').val(), nueObs: $('#txtObsChangeCierre').val() }}).done(function(resp) {
+			if(resp!='-1'){
+				location.reload();
+				pantallaOver(false);
+			}
+		});
+	}
+});
 <?php } ?>
+
+
 
 
 

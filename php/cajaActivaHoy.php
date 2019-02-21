@@ -1,12 +1,11 @@
 <?php 
 require("conkarl.php");
+require "variablesGlobales.php";
 date_default_timezone_set('America/Lima');
-
 $hayCaja= require_once("comprobarCajaHoy.php");
 $filas=array();
 if (! isset($_GET['fecha'])) { //si existe lista fecha requerida
 	$_GET['fecha']=date('Y-m-d');
-	
 }
 if(isset($_GET['cuadre'])){
 	$sql= mysqli_query($conection,"SELECT cu.*, u.usuNombres FROM `cuadre` cu
@@ -16,7 +15,6 @@ if(isset($_GET['cuadre'])){
 	$sql = mysqli_query($conection,"call cajaActivaHoy();"); // $_GET['fecha']
 }
 $row = mysqli_fetch_array($sql, MYSQLI_ASSOC);
-
 if($hayCaja>0  ){ 
 	if( $hayCaja==$row['idCuadre'] && (isset($_GET['cuadre']) )){ ?>
 	<div class="container-fluid row ">
@@ -51,7 +49,7 @@ if($hayCaja>0  ){
 	<div class="container-fluid row ">
 		<div class="col-xs-12 col-md-7">
 			<div class="alert alert-morado container-fluid" role="alert">
-				<div class="col-xs-4 col-sm-2 ">
+				<div class="col-xs-4 col-sm-2 col-md-3">
 					<img src="images/ghost.png" alt="img-responsive" width="100%">
 				</div>
 				<div class="col-xs-8">
@@ -74,20 +72,18 @@ if($hayCaja>0  ){
 	</div>
 	<?php
 }
-
-
 if( isset($_GET['cuadre']) ){ ?>
 <div class="col-xs-12 text-center purple-text text-lighten-1">
 	<h4 class="mayuscula"><strong>Cajero: </strong> <?php echo $row['usuNombres']; ?></h4>
 </div>
 <div class="col-xs-12 col-sm-6 text-center purple-text text-lighten-1">
-	<h4>Apertura:</h4>
+	<h4>Apertura: <? if( in_array($_COOKIE['ckPower'], $soloDios) ): ?> <button class="btn btn-infocat btn-outline btn-xs" id="btnCambiarApertura"><i class="icofont icofont-cube"></i> Cambiar</button> <? endif;?> </h4>
 	<h4><strong >S/ <span id="spanApertura"><?= str_replace(",", '', number_format($row['cuaApertura'],2)); ?></span></strong></h4>
 	<p><?php $fechaN= new DateTime($row['fechaInicio']); echo $fechaN->format('j/n/Y g:i a'); ?></p>
 	<p><strong>Obs.</strong> <span class="mayuscula"><? if($row['cuaObs']==''){echo '-'; }else{echo $row['cuaObs'];} ?></span></p>
 </div>
 <div class="col-xs-12 col-sm-6 text-center purple-text text-lighten-1">
-	<h4>Cierre:</h4>
+	<h4>Cierre: <? if($row['fechaFin']<>'0000-00-00 00:00:00'): if( in_array($_COOKIE['ckPower'], $soloDios) ): ?> <button class="btn btn-infocat btn-outline btn-xs" id="btnCambiarCierre"><i class="icofont icofont-cube"></i> Cambiar</button> <? endif; endif;?></h4>
 	<h4><strong>S/ <span id="spanCierrev3"><?= str_replace(",", '', number_format($row['cuaCierre'],2)); ?></span></strong></h4>
 	<p><?php if($row['fechaFin']=='0000-00-00 00:00:00'){ echo 'Sin cerrar aún';}else{ $fechaN= new DateTime($row['fechaFin']); echo $fechaN->format('j/n/Y g:i a'); } ?></p>
 	<p><strong>Obs.</strong> <span class="mayuscula"><? if($row['cuaObsCierre']==''){echo '-'; }else{echo $row['cuaObsCierre'];} ?></span></p>
@@ -98,19 +94,14 @@ if( isset($_GET['cuadre']) ){ ?>
 </div>
 
 <?php } }
-
-
-
 // if (!$sql) { ////codigo para ver donde esta el error
 //     printf("Error: %s\n", mysqli_error($conection));
 //     exit();
 // }
-
 /*while($row = mysqli_fetch_array($sql, MYSQLI_ASSOC))
 {
 	$filas[$i]= $row;
 	$i++;
 }*/
 mysqli_close($conection); //desconectamos la base de datos
-
 ?>

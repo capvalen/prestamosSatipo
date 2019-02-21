@@ -60,7 +60,7 @@ $fechaHoy = new DateTime();
 	<?php
 
 	$sqlCr="SELECT presFechaAutom, presMontoDesembolso, presPeriodo, tpr.tpreDescipcion,
-	u.usuNombres, preInteresPers, prendaSimple,
+	u.usuNombres, preInteresPers,
 	case presFechaDesembolso when '0000-00-00' then 'Desembolso pendiente' else presFechaDesembolso end as `presFechaDesembolso`,
 	case presAprobado when 0 then 'Sin aprobar' when 2 then 'Rechazado' else 'Aprobado' end as `presAprobado`, 
 	case when ua.usuNombres is Null then '-' else ua.usuNombres end  as `usuarioAprobador`, pre.idTipoPrestamo
@@ -93,13 +93,12 @@ $fechaHoy = new DateTime();
 			<div class="row">
 				<div class="col-sm-2"><label for="">Verificación</label><p><?= $rowCr['presAprobado']; ?></p></div>
 				<div class="col-sm-2"><label for="">Verificador</label><p><?= $rowCr['usuarioAprobador']; ?></p></div>
-				<div class="col-sm-2"><label for="">Prenda</label><p class="mayuscula"><?= $rowCr['prendaSimple']; ?></p></div>
 			</div>
 			<div class="row">
 				<div class="col-sm-2"><label for="">Fecha préstamo</label><p><?php $fechaAut= new DateTime($rowCr['presFechaAutom']); echo $fechaAut->format('j/m/Y h:m a'); ?></p></div>
 				<div class="col-sm-2"><label for="">Fecha desemboslo</label><p><?php if($rowCr['presFechaDesembolso']=='Desembolso pendiente'){echo $rowCr['presFechaDesembolso'];}else{$fechaDes= new DateTime($rowCr['presFechaDesembolso']); echo $fechaDes->format('j/m/Y h:m a');} ?></p></div>
-				<div class="col-sm-2"><label for="">Desembolso</label><p>S/ <?= number_format($rowCr['presMontoDesembolso'],2); ?></p></div>
-				<div class="col-sm-2"><label for="">Periodo</label><p><?= $rowCr['tpreDescipcion']; ?></p></div>
+				<div class="col-sm-2"><label for="">Desembolso</label><p>S/ <?= number_format($rowCr['presMontoDesembolso'],2); ?></p> <span class="hidden" id="spanMontoDado"><?= $rowCr['presMontoDesembolso']; ?></span></div>
+				<div class="col-sm-2"><label for="">Meses</label><p><?= $rowCr['tpreDescipcion']; ?></p></div>
 				<div class="col-sm-2"><label for="">Interés</label><p><?= $rowCr['preInteresPers']."%"; ?></p></div>
 				<div class="col-sm-2"><label for="">Analista</label><p><?= $rowCr['usuNombres']; ?></p></div>
 			</div>
@@ -128,19 +127,22 @@ $fechaHoy = new DateTime();
 
 			<div class="container row" id="rowBotonesMaestros">
 				<div class="col-xs-12 col-md-6">
-					<button class="btn btn-negro btn-outline btn-lg " id="btnImpresionPrevia" data-pre="<?= $_GET['credito'];?>"><i class="icofont-print"></i> Imprimir cronograma</button>
+					<button class="btn btn-negro btn-outline" id="btnImpresionPrevia" data-pre="<?= $_GET['credito'];?>"><i class="icofont-print"></i> Imprimir cronograma</button>
 				<?php if(isset($_GET['credito']) && $rowCr['presAprobado']== 'Sin aprobar'): ?>
-					<button class="btn btn-success btn-outline btn-lg" id="btnShowVerificarCredito"><i class="icofont-check-circled"></i> Aprobar crédito</button>
-					<button class="btn btn-danger btn-outline btn-lg" id="btnDenyVerificarCredito"><i class="icofont-thumbs-down"></i> Denegar crédito</button>
-				<?php endif; ?>
+					<button class="btn btn-success btn-outline " id="btnShowVerificarCredito"><i class="icofont-check-circled"></i> Aprobar crédito</button>
+					<button class="btn btn-danger btn-outline " id="btnDenyVerificarCredito"><i class="icofont-thumbs-down"></i> Denegar crédito</button>
+				<?php else: 
+					if( in_array( $_COOKIE['ckPower'], $soloAdmis) &&  $rowCr['presAprobado']<>"Rechazado"):?>
+					<button class="btn btn-rojoFresa btn-outline" id="btnAnularCredito"><i class="icofont-ui-delete"></i> Anular crédito</button>
+				<?php endif; endif; ?>
 				</div>
 
 			<?php if(isset($_GET['credito']) && $rowCr['presAprobado']<> 'Sin aprobar' && $rowCr['presAprobado']<> "Rechazado" && in_array($_COOKIE['ckPower'], $soloAdmis)): ?>
 			<?php if( $hayCaja==true ):
 				if($rowCr['presFechaDesembolso']=='Desembolso pendiente'): ?>
-				<button class="btn btn-warning btn-outline btn-lg" id="btnDesembolsar"><i class="icofont-money"></i> Desembolsar</button>
+				<button class="btn btn-warning btn-outline" id="btnDesembolsar"><i class="icofont-money"></i> Desembolsar</button>
 			<?php else:?>
-				<button class="btn btn-infocat btn-outline btn-lg" id="btnsolicitarDeuda"><i class="icofont-money"></i> Pago global</button>
+				<button class="btn btn-infocat btn-outline" id="btnsolicitarDeuda"><i class="icofont-money"></i> Pago global</button>
 			<?php endif; ?>
 			<?php else: ?> 
 				<div class="col-xs-12 col-md-6"><br>
@@ -178,41 +180,70 @@ $fechaHoy = new DateTime();
 				</thead>
 				<tbody>
 			<?php 
+			$sqlPrim = "SELECT `presMontoDesembolso`, `presPeriodo`,`preInteresPers`, `idTipoPrestamo`
+			from prestamo where `idPrestamo` = {$codCredito}";
+		
+			$resultadoPrim=$esclavo->query($sqlPrim);
+			$rowPrim=$resultadoPrim->fetch_assoc();
+				
+			$monto = $rowPrim['presMontoDesembolso'];
+			
+			$tasa = $rowPrim['preInteresPers']/100;
+			$meses =  $rowPrim['presPeriodo'];
+
+			switch ($rowPrim['idTipoPrestamo']){
+				case "1": //DIARIO
+					$plazo = $rowPrim['presPeriodo']*30;
+					break;
+				case "2": //SEMANAL
+					$plazo = $rowPrim['presPeriodo']*4;
+					break;
+				case "4": //QUINCENAL
+					$plazo = $rowPrim['presPeriodo']*2;
+					break;
+				case "3": //MENSUAL
+					$plazo = $rowPrim['presPeriodo']*1	;
+					break;
+				default: break;
+			}
+			$interes = $monto * $tasa * $meses;
+			$pagoTotal  = $monto+ $interes;
+
+			$capitalPartido = round($monto/$plazo,1, PHP_ROUND_HALF_UP);
+			$cuota = round( $pagoTotal/$plazo ,1, PHP_ROUND_HALF_UP);
+			$intGanado = round( $interes/ $plazo ,1, PHP_ROUND_HALF_UP);
+
+
 			$sqlCuot= "SELECT prc.*, pre.preInteresPers, pre.presMontoDesembolso, pre.presPeriodo FROM prestamo_cuotas prc
 			inner join prestamo pre on pre.idPrestamo = prc.idPrestamo
 			where prc.idPrestamo = {$codCredito}
 			order by cuotFechaPago asc";
+
+
 			if($respCuot = $cadena->query($sqlCuot)){ $k=0;
 				$sumCapital = 0; $sumInteres =0; $sumCuota =0;
 				while($rowCuot = $respCuot->fetch_assoc()){
-					$monto = $rowCuot['presMontoDesembolso'];
-					$interes = $rowCuot['preInteresPers'];
-					$plazo = $rowCuot['presPeriodo'];
-					$capitalPartido = $monto/$plazo;
-					$intGanado = $monto*$interes/100/$plazo;
-					$cuotaGanado = $capitalPartido + $intGanado;
-					
-					if($k>=1) {$sumCapital = $sumCapital+$capitalPartido;
-					$sumInteres = $sumInteres+$intGanado;
-					$sumCuota = $sumCuota+$cuotaGanado;}
-
 					?>
 				<tr>
 					<td>SP-<?= $rowCuot['idCuota']; ?></td>
 					<td><?php $fechaCu= new DateTime($rowCuot['cuotFechaPago']); echo $fechaCu->format('d/m/Y'); ?></td>
 					<td><? if($k>=1) {echo number_format($capitalPartido,2);} ?></td>
 					<td><? if($k>=1) {echo number_format($intGanado,2);} ?></td>
-					<td><? if($k>=1) {echo number_format($cuotaGanado,2);} ?></td>
+					<td><? if($k>=1) {echo number_format($cuota,2);} ?></td>
 					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'): echo "Desembolso"; elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; else: echo $rowCuot['cuotFechaCancelacion']; endif;  ?></td>
 					<td class="tdPagoCli" data-pago="<?= number_format($rowCuot['cuotPago'],2); ?>"><? if($k>=1) {echo number_format($rowCuot['cuotPago'],2);} ?></td>
 					<td class="hidden"><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
 					<td><?php if( in_array($_COOKIE['ckPower'], $soloAdmis) &&  $rowCuot['idTipoPrestamo']=='79' && $rowCr['presFechaDesembolso']<>'Desembolso pendiente' && $k>=1):
 					$diasDebe2=$fechaHoy ->diff($fechaCu);
+					if( $rowCr['presAprobado']== "Rechazado" ){ ?>
+						<p class="red-text text-darken-1">Rechazado</p>
+					<?php } else{
 						if( floatval($diasDebe2->format('%R%a')) < 0 ){
-						?> <p class="red-text text-darken-1">Cuota fuera de fecha</p>
+						?> <p class="red-text text-darken-1">Cuota fuera de fecha (<?= $diasDebe2->format('%a').' días';?>)</p>
 						<!-- <button class="btn btn-primary btn-outline btn-sm btnPagarCuota"><i class="icofont-money"></i> Pagar</button> --> <?php
 						}else{
 							?> <p class="blue-text text-accent-2">Cuota en buena fecha</p><?php
+						}
 						}
 						endif;
 						if($rowCuot['cuotPago']<>'0.00' && $rowCr['presFechaDesembolso']<>'Desembolso pendiente'): 
@@ -233,9 +264,9 @@ $fechaHoy = new DateTime();
 				<tfoot>
 					<tr>
 						<th></th> <th></th>
-						<th><?= number_format($sumCapital,2); ?></th>
-						<th><?= number_format($sumInteres,2); ?></th>
-						<th><?= number_format($sumCuota,2); ?></th>
+						<th>S/ <?= number_format($monto,2); ?></th>
+						<th>S/ <?= number_format($interes,2); ?></th>
+						<th>S/ <?= number_format($pagoTotal,2); ?></th>
 						<th></th> <th></th><th> </th>
 						
 					</tr>
@@ -341,16 +372,16 @@ $fechaHoy = new DateTime();
 							</select>
 						</div>
 						<div class="col-xs-6 col-sm-3">
-							<label for="">Interés</label>
-							<input type="number" class="form-control esNumero noEsDecimal text-center" id="txtInteres" value=0>
-						</div>
-						<div class="col-xs-6 col-sm-3">
-							<label for="">Periodo</label>
-							<input type="number" class="form-control esNumero noEsDecimal text-center" id="txtPeriodo" value=0>
-						</div>
-						<div class="col-xs-6 col-sm-3">
 							<label for="">Monto</label>
 							<input type="number" class="form-control esMoneda text-center" id="txtMontoPrinc" value=0.00>
+						</div>
+						<div class="col-xs-6 col-sm-3">
+							<label for="">Meses</label>
+							<input type="number" class="form-control esNumero noEsDecimal text-center" id="txtPeriodo" value=0 >
+						</div>
+						<div class="col-xs-6 col-sm-3">
+							<label for="">Interés</label>
+							<input type="number" class="form-control esNumero esDecimal text-center" id="txtInteres" value=0>
 						</div>
 						<div class="col-xs-6 col-sm-3">
 							<label for="">Fecha Desembolso</label>
@@ -366,8 +397,8 @@ $fechaHoy = new DateTime();
 						</div>
 						
 						<div class="col-xs-5">
-							<button class="btn btn-azul btn-lg btn-outline btnSinBorde" style="margin-top: 10px;" id="btnSimularPagos"><i class="icofont-support-faq"></i> Simular</button>
-							<button class="btn btn-infocat btn-lg btn-outline btnSinBorde" style="margin-top: 10px;" id="btnGuardarCred"><i class="icofont-save"></i> Guardar</button>
+							<button class="btn btn-azul btn-outline btnSinBorde" style="margin-top: 10px;" id="btnSimularPagos"><i class="icofont-support-faq"></i> Simular</button>
+							<button class="btn btn-infocat btn-outline btnSinBorde" style="margin-top: 10px;" id="btnGuardarCred"><i class="icofont-save"></i> Guardar</button>
 						
 						</div>
 						<label class="orange-text text-darken-1 hidden" id="labelFaltaCombos" for=""><i class="icofont-warning"></i> Todas las casillas tienen que estar rellenadas para proceder</label>
@@ -380,11 +411,11 @@ $fechaHoy = new DateTime();
 				<p><strong>Resultados:</strong></p>
 				<div class="container row" id="divVariables">
 				</div>
-				<table class="table table-hover" id="tableSimulacion">
+				<div  id="tableSimulacion">
 				<!-- <thead id="theadResultados">
 				</thead>
 				<tbody id="tbodyResultados"></tbody>-->
-				</table> 
+				</div> 
 				</div>
 			</div>
 		
@@ -578,6 +609,38 @@ $('#tbodySocios').on('click','.btnRemoveCanasta',function() {
 });
 $('#tableSubIds tr').last().find('td').eq(5).text('0.00');
 
+/* $('#sltTipoPrestamo').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+  switch( $('#sltTipoPrestamo').selectpicker('val') ){
+	  case "1": $('#txtPeriodo').attr( "max", "90" )
+	  break;
+  }
+}); */
+
+
+$('#txtPeriodo').keyup(function() {
+	switch( $('#sltTipoPrestamo').selectpicker('val') ){
+	  case "1":
+	  	if( $('#txtPeriodo').val() >=90 ){
+			$('#txtPeriodo').val(90);
+		}
+		break;
+		case "2":
+	  	if( $('#txtPeriodo').val() >=48 ){
+			$('#txtPeriodo').val(48);
+		}
+		break;
+		case "3":
+	  	if( $('#txtPeriodo').val() >=60 ){
+			$('#txtPeriodo').val(60);
+		}
+		break;
+		case "4":
+	  	if( $('#txtPeriodo').val() >=24 ){
+			$('#txtPeriodo').val(24);
+		}
+	  break;
+  }
+});
 
 }); //Fin de Document ready
 
@@ -747,11 +810,11 @@ $('#rowBotonesMaestros').on('click', '#btnImpresionPrevia', function(){
 		window.open(dataUrl, '_blank' );
 });
 $('#sltTipoPrestamo').change(function() {
-	if( $(this).val()==3 ){
+/* 	if( $(this).val()==3 ){
 		$('#divPrimerPago').removeClass('hidden');
 	}else{
 		$('#divPrimerPago').addClass('hidden');
-	}
+	} */
 });
 $('#dtpFechaIniciov3').change(function() {
 	$('#dtpFechaPrimerv3').val('01/'+moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY' ).add(1, 'month').format('MM/YYYY'))
@@ -762,7 +825,10 @@ $('#btnDesembolsar').click(function() {
 	$.ajax({url: 'php/updateDesembolsoDia.php', type: 'POST', data:{ credito: '<?= $_GET['credito'];?>' }}).done(function(resp) {
 		console.log(resp)
 		if(resp==true){
-			location.reload();
+			//location.reload();
+			var seguro = parseFloat($('#spanMontoDado').text()*0.015).toFixed(2);
+			$('#h1Bien').html(`Cobre S/ ${seguro} de seguro al cliente.`);
+			$('#modalGuardadoCorrecto').modal('show');
 		}
 	});
 });
@@ -830,6 +896,12 @@ $('#btnVerificarCredito').click(function() {
 		}
 	});
 });
+
+<?php endif;
+if( in_array($_COOKIE['ckPower'], $soloAdmis)){ ?>
+$('#btnAnularCredito').click(function() {
+	$('#modalDenegarCredito').modal('show');
+});
 $('#btnDenegarCredito').click(function() {
 	$.ajax({url: 'php/updateDenegarCredito.php', type: 'POST', data: { credit: '<?= $codCredito; ?>', razon: $('#txtDenegarRazon').val() }}).done(function(resp) { //console.log(resp)
 		if(resp==1){
@@ -837,8 +909,8 @@ $('#btnDenegarCredito').click(function() {
 		}
 	});
 });
-<?php endif;
-if( in_array($_COOKIE['ckPower'], $admis) ){ ?>
+<?php }
+if( in_array($_COOKIE['ckPower'], $soloAutorizados) ){ ?>
 
 $('.btnPagarCuota').click(function() {
 	var code= $(this).parent().parent().children().first().text();
