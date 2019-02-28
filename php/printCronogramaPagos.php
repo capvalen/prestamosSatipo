@@ -43,7 +43,7 @@ if($llamado= $conection->query($sql)){
   }
   .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
     padding: 3px 8px;
-    line-height: 1.4;
+    line-height: 1.3;
   }
   .col-xs-6 {
     width: 48%;
@@ -102,6 +102,7 @@ if($llamado= $conection->query($sql)){
            switch ($respuesta['idTipoPrestamo']) {
             case '1':
             case '2':
+			case '3':
             case '4':
             ?>
             <thead><tr><th>N°</th> <th>F. Pago</th> <th>Cuota</th> <th>Monto P.</th> <th class="hidden">Saldo</th> <th>Firma</th> </tr></thead>
@@ -128,7 +129,7 @@ if($llamado= $conection->query($sql)){
             
             
               break;
-            case '3':
+            case '99':
             $i=0;
             $sql2 = "SELECT * FROM `prestamo_cuotas` WHERE `idPrestamo` = {$idPresPost}";
               ?> 
