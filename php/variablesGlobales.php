@@ -6,7 +6,7 @@ $soloAdmis=array(1,4,8);
 $soloDios=array(1);
 $soloCaja=array(4);
 $soloEspecial=array(8);
-
+$soloAutorizados=array(1,4);
 $i=0;
 
 $sql='SELECT * FROM `datosgenerales`;';

@@ -65,7 +65,7 @@
 		</div>
 			
 		<div class="modal-footer">
-			<button class="btn btn-primary btn-outline" id="btnPrintTicketPagoGlo" data-dismiss="modal"><i class="icofont-paper"></i> Imprimir ticket</button>
+			<button class="btn btn-primary btn-outline hidden" id="btnPrintTicketPagoGlo"><i class="icofont-paper"></i> Imprimir comprobante</button>
 		</div>
 	</div>
 	</div>

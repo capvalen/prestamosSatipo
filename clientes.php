@@ -104,7 +104,7 @@ $base58 = new StephenHill\Base58();?>
 				inner join calles can on can.idCalle = a.idCalle
 				
 				inner join estadocivil ec on ec.idEstadoCivil = c.idEstadoCivil
-				where idCliente = {$idCli}";
+				where idCliente = {$idCli};";
 				$respDato = $cadena->query($sqlDato);
 				$rowDato=$respDato->fetch_assoc();
 				?>

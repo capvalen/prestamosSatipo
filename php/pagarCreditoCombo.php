@@ -11,16 +11,15 @@ $diasMora=0; $moraTotal=0;
 $dinero= $_POST['dinero'];
 $idPrestamo = $base58->decode($_POST['credito']);
 $sql= "SELECT * FROM prestamo_cuotas
-where cuotFechaPago <=curdate() and idPrestamo = {$idPrestamo} and idTipoPrestamo in (33, 79) and idTipoPrestamo <>43
-order by cuotFechaPago asc;";
-
+where  idPrestamo = {$idPrestamo} and idTipoPrestamo in (33, 79) and idTipoPrestamo <>43
+order by cuotFechaPago asc;"; //cuotFechaPago <=curdate() and
 $resultado=$esclavo->query($sql);
 $fechaHoy = new DateTime();
 
 while($row=$resultado->fetch_assoc()){
 	$fechaCuota = new DateTime($row['cuotFechaPago']);
-	$diasDebe=$fechaHoy ->diff($fechaCuota);
-	$restaDias= floatval($diasDebe->format('%a'));
+	$diasDebe=$fechaCuota ->diff($fechaHoy);
+	$restaDias= floatval($diasDebe->format('%R%a'));
 	if($restaDias>0){
 		//sumar Dia y Mora
 		if($k==0){
@@ -69,8 +68,7 @@ while($row2=$resultado->fetch_assoc()){
 		$sentenciaLarga = $sentenciaLarga. "UPDATE `prestamo_cuotas` SET 
 			`cuotFechaCancelacion`= now(),
 			`cuotPago` = `cuotPago`+ {$debePendiente},
-			`idTipoPrestamo` = 80,
-			`preSaldoDebe` = `preSaldoDebe` - $debePendiente
+			`idTipoPrestamo` = 80
 			WHERE `idCuota` = {$row2['idCuota']};
 			INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 			VALUES (null,{$idPrestamo},{$row2['idCuota']},80,now(),{$debePendiente},'',1,1,{$_COOKIE['ckidUsuario']});";
@@ -84,8 +82,7 @@ while($row2=$resultado->fetch_assoc()){
 			$sentenciaLarga = $sentenciaLarga. "UPDATE `prestamo_cuotas` SET 
 			`cuotFechaCancelacion`= now(),
 			`cuotPago` = `cuotPago`+ {$dinero},
-			`idTipoPrestamo` = 33,
-			`preSaldoDebe` = `preSaldoDebe` - $dinero
+			`idTipoPrestamo` = 33
 			WHERE `idCuota` = {$row2['idCuota']};
 			INSERT INTO `caja`(`idCaja`, `idPrestamo`, `idCuota`, `idTipoProceso`, `cajaFecha`, `cajaValor`, `cajaObservacion`, `cajaMoneda`, `cajaActivo`, `idUsuario`)
 			VALUES (null,{$idPrestamo},{$row2['idCuota']},33,now(),{$dinero},'',1,1,{$_COOKIE['ckidUsuario']})";

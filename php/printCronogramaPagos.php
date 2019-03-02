@@ -102,7 +102,6 @@ if($llamado= $conection->query($sql)){
            switch ($respuesta['idTipoPrestamo']) {
             case '1':
             case '2':
-			case '3':
             case '4':
             ?>
             <thead><tr><th>N°</th> <th>F. Pago</th> <th>Cuota</th> <th>Monto P.</th> <th class="hidden">Saldo</th> <th>Firma</th> </tr></thead>
@@ -129,7 +128,7 @@ if($llamado= $conection->query($sql)){
             
             
               break;
-            case '99':
+            case '3':
             $i=0;
             $sql2 = "SELECT * FROM `prestamo_cuotas` WHERE `idPrestamo` = {$idPresPost}";
               ?> 
