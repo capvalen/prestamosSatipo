@@ -7,6 +7,7 @@ $base58 = new StephenHill\Base58();
 include "php/variablesGlobales.php";
 $hayCaja= require_once("php/comprobarCajaHoy.php");
 $fechaHoy = new DateTime();
+$codCredito='';
 ?>
 
 <!DOCTYPE html>
