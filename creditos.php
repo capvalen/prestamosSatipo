@@ -412,11 +412,11 @@ $codCredito='';
 				<p><strong>Resultados:</strong></p>
 				<div class="container row" id="divVariables">
 				</div>
-				<div  id="tableSimulacion">
+				<table class="table table-hover" id="tableSimulacion">
 				<!-- <thead id="theadResultados">
 				</thead>
 				<tbody id="tbodyResultados"></tbody>-->
-				</div> 
+				</table> 
 				</div>
 			</div>
 		
