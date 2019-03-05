@@ -189,7 +189,7 @@ $codCredito='';
 				
 			$monto = $rowPrim['presMontoDesembolso'];
 			
-			$tasa = $rowPrim['preInteresPers']/100;
+			$tasa = 1+($rowPrim['preInteresPers']/100);
 			$meses =  $rowPrim['presPeriodo'];
 
 			switch ($rowPrim['idTipoPrestamo']){
@@ -207,12 +207,15 @@ $codCredito='';
 					break;
 				default: break;
 			}
-			$interes = $monto * $tasa * $meses;
-			$pagoTotal  = $monto+ $interes;
+			
+			
 
-			$capitalPartido = round($monto/$plazo,1, PHP_ROUND_HALF_UP);
+			$capitalPartido = round($monto/$meses,1, PHP_ROUND_HALF_UP);
+			$interes = ($monto * $tasa / $meses)-$capitalPartido;
+			
+			$intGanado = round( $monto * $tasa / $meses ,1, PHP_ROUND_HALF_UP);
+			$pagoTotal  = $monto+ $interes;
 			$cuota = round( $pagoTotal/$plazo ,1, PHP_ROUND_HALF_UP);
-			$intGanado = round( $interes/ $plazo ,1, PHP_ROUND_HALF_UP);
 
 
 			$sqlCuot= "SELECT prc.*, pre.preInteresPers, pre.presMontoDesembolso, pre.presPeriodo FROM prestamo_cuotas prc
@@ -224,13 +227,15 @@ $codCredito='';
 			if($respCuot = $cadena->query($sqlCuot)){ $k=0;
 				$sumCapital = 0; $sumInteres =0; $sumCuota =0;
 				while($rowCuot = $respCuot->fetch_assoc()){
+					if($k>=1) {$sumInteres += $interes;}
 					?>
 				<tr>
 					<td>SP-<?= $rowCuot['idCuota']; ?></td>
 					<td><?php $fechaCu= new DateTime($rowCuot['cuotFechaPago']); echo $fechaCu->format('d/m/Y'); ?></td>
 					<td><? if($k>=1) {echo number_format($capitalPartido,2);} ?></td>
-					<td><? if($k>=1) {echo number_format($intGanado,2);} ?></td>
-					<td><? if($k>=1) {echo number_format($cuota,2);} ?></td>
+					<td><? if($k>=1) {echo number_format($interes,2);} ?></td>
+					<td><? if($k>=1) {echo number_format($rowCuot['cuotCuota'],2);} ?></td>
+					
 					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'): echo "Desembolso"; elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; else: echo $rowCuot['cuotFechaCancelacion']; endif;  ?></td>
 					<td class="tdPagoCli" data-pago="<?= number_format($rowCuot['cuotPago'],2); ?>"><? if($k>=1) {echo number_format($rowCuot['cuotPago'],2);} ?></td>
 					<td class="hidden"><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
@@ -266,8 +271,8 @@ $codCredito='';
 					<tr>
 						<th></th> <th></th>
 						<th>S/ <?= number_format($monto,2); ?></th>
-						<th>S/ <?= number_format($interes,2); ?></th>
-						<th>S/ <?= number_format($pagoTotal,2); ?></th>
+						<th>S/ <?= number_format($sumInteres,2); ?></th>
+						<th>S/ <?= number_format($sumInteres+$monto,2); ?></th>
 						<th></th> <th></th><th> </th>
 						
 					</tr>

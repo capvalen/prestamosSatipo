@@ -94,6 +94,21 @@ while($row2=$resultado->fetch_assoc()){
 }
 
 $respuLargo=$prisionero->multi_query($sentenciaLarga);
+
+
+//------- Verificamos que el crédito ya está pagado
+$sqlComprobar= "SELECT idPrestamo FROM prestamo_cuotas
+where  idPrestamo = {$idPrestamo} and idTipoPrestamo in (33, 79) and idTipoPrestamo <>43;"; //cuotFechaPago <=curdate() and
+$resultadoComprobar=$esclavo->query($sqlComprobar);
+$numLineas=$resultadoComprobar->num_rows;
+
+if($numLineas==0){
+	$sqlUpdFin="UPDATE `prestamo` SET 
+	`presActivo`=2, `fechaFinPrestamo`=now()
+	where `idPrestamo`={$idPrestamo};";
+	$cadena->query($sqlUpdFin);
+}
+
 if($respuLargo){
 	//echo true;
 	echo json_encode($filas);
