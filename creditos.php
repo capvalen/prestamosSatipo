@@ -393,7 +393,7 @@ $codCredito='';
 							<label for="">Fecha Desembolso</label>
 							<input type="text" id="dtpFechaIniciov3" class="form-control text-center" placeholder="Fecha para controlar citas" autocomplete="off">
 						</div>
-						<div class="col-xs-6 col-sm-3 hidden" id="divPrimerPago">
+						<div class="col-xs-6 col-sm-3 " id="divPrimerPago">
 							<label for="">Fecha primer pago</label>
 							<input type="text" id="dtpFechaPrimerv3" class="form-control text-center" placeholder="Fecha para controlar citas" autocomplete="off">
 						</div>
@@ -821,9 +821,13 @@ $('#sltTipoPrestamo').change(function() {
 	}else{
 		$('#divPrimerPago').addClass('hidden');
 	} */
+	if( $('#sltTipoPrestamo').val() ==3 ){
+		$('#dtpFechaPrimerv3').val(moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY' ).add(1, 'month').format('DD/MM/YYYY'));
+	}
+	
 });
 $('#dtpFechaIniciov3').change(function() {
-	$('#dtpFechaPrimerv3').val('01/'+moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY' ).add(1, 'month').format('MM/YYYY'))
+	$('#dtpFechaPrimerv3').val('01/'+moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY' ).add(1, 'month').format('MM/YYYY'));
 	$('#dtpFechaPrimerv3').bootstrapMaterialDatePicker( 'setMinDate', moment($('#dtpFechaIniciov3').val(), 'DD/MM/YYYY').add(1, 'days') );
 });
 <?php if(isset( $_GET['credito'])): ?>
