@@ -44,12 +44,13 @@ include "php/variablesGlobales.php";
 				<div class="col-xs-6 col-md-3">
 					<select name="" class="form-control" id="sltFiltroReporte">
 						<option value="R3" class="optReporte">Créditos nuevos</option>
+						<option value="R4" class="optReporte">Clientes con moras</option>
 						<option value="R1" class="optReporte">Movimientos de entrada</option>
 						<option value="R2" class="optReporte">Movimientos de Salida</option>
 
 					</select>
 				</div>
-				<div class="col-xs-6 col-md-6">
+				<div class="col-xs-6 col-md-6" id="divIntervaloFechas">
 					<div class="sandbox-container">
 						<div class="input-daterange input-group" id="datepicker">
 							<input type="text" class=" form-control" id="inputFechaInicio" name="start" />
@@ -127,9 +128,16 @@ $(document).ready(function(){
 $('#btnFiltrarReporte').click(function() { //console.log('a')
 	if( $('#sltFiltroReporte').val()!=-1 && moment($('#inputFechaInicio').val(), 'DD/MM/YYYY').isValid() && moment($('#inputFechaFin').val(), 'DD/MM/YYYY').isValid() ){
 		$.ajax({url: 'php/reporteXCaso.php', type: 'POST', data: { caso: $('#sltFiltroReporte').val(), fInicio :  moment($('#inputFechaInicio').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'), fFinal: moment($('#inputFechaFin').val(), 'DD/MM/YYYY').format('YYYY-MM-DD') }}).done(function(resp) {
-			console.log(resp);
+			//console.log(resp);
 			$('#resultadoReporte').html(resp);
 		});
+	}
+});
+$('#sltFiltroReporte').change(function() {
+	if( $('#sltFiltroReporte').val()=='R4' ){
+		$('#divIntervaloFechas').addClass('hidden');
+	}else{
+		$('#divIntervaloFechas').removeClass('hidden');
 	}
 });
 </script>

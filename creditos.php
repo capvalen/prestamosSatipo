@@ -64,7 +64,7 @@ $codCredito='';
 	u.usuNombres, preInteresPers,
 	case presFechaDesembolso when '0000-00-00' then 'Desembolso pendiente' else presFechaDesembolso end as `presFechaDesembolso`,
 	case presAprobado when 0 then 'Sin aprobar' when 2 then 'Rechazado' else 'Aprobado' end as `presAprobado`, 
-	case when ua.usuNombres is Null then '-' else ua.usuNombres end  as `usuarioAprobador`, pre.idTipoPrestamo
+	case when ua.usuNombres is Null then '-' else ua.usuNombres end  as `usuarioAprobador`, pre.idTipoPrestamo, prendaSimple
 	FROM `prestamo` pre
 	inner join usuario u on u.idUsuario = pre.idUsuario
 	left join usuario ua on ua.idUsuario = pre.idUsuarioAprobador
@@ -94,14 +94,16 @@ $codCredito='';
 			<div class="row">
 				<div class="col-sm-2"><label for="">Verificación</label><p><?= $rowCr['presAprobado']; ?></p></div>
 				<div class="col-sm-2"><label for="">Verificador</label><p><?= $rowCr['usuarioAprobador']; ?></p></div>
-			</div>
-			<div class="row">
 				<div class="col-sm-2"><label for="">Fecha préstamo</label><p><?php $fechaAut= new DateTime($rowCr['presFechaAutom']); echo $fechaAut->format('j/m/Y h:m a'); ?></p></div>
 				<div class="col-sm-2"><label for="">Fecha desemboslo</label><p><?php if($rowCr['presFechaDesembolso']=='Desembolso pendiente'){echo $rowCr['presFechaDesembolso'];}else{$fechaDes= new DateTime($rowCr['presFechaDesembolso']); echo $fechaDes->format('j/m/Y h:m a');} ?></p></div>
+			</div>
+			<div class="row">
 				<div class="col-sm-2"><label for="">Desembolso</label><p>S/ <?= number_format($rowCr['presMontoDesembolso'],2); ?></p> <span class="hidden" id="spanMontoDado"><?= $rowCr['presMontoDesembolso']; ?></span></div>
 				<div class="col-sm-2"><label for="">Meses</label><p><?= $rowCr['tpreDescipcion']; ?></p></div>
 				<div class="col-sm-2"><label for="">Interés</label><p><?= $rowCr['preInteresPers']."%"; ?></p></div>
 				<div class="col-sm-2"><label for="">Analista</label><p><?= $rowCr['usuNombres']; ?></p></div>
+				<div class="col-sm-4"><label for="">Prenda</label><p class="mayuscula"><?= $rowCr['prendaSimple']; ?></p></div>
+			</div>
 			</div>
 
 			<hr>
@@ -441,6 +443,7 @@ $codCredito='';
 					<th>Periodo</th>
 					<th>Interés</th>
 					<th>Desembolso</th>
+					<th>Prenda</th>
 				</tr>
 			</thead>
 				<? include 'php/listarTodosPrestamos.php';?>

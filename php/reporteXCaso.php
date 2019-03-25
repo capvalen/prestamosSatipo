@@ -150,6 +150,50 @@ switch ($_POST['caso']) {
 			</tfoot>
 		<?
 		break;
+
+
+
+		case 'R4':
+		$sql="SELECT idCuota, pc.idPrestamo, cuotFechaPago, cuotCuota, cuotPago, tip.tipoDescripcion, c.idCliente, lower( concat(c.cliApellidoPaterno, ' ', c.cliApellidoMaterno,' ', c.cliNombres) ) as cliNombres, c.cliCelularPersonal FROM `prestamo_cuotas` pc inner join involucrados i on i.idPrestamo = pc.idPrestamo inner join cliente c on c.idCliente = i.idCliente inner join tipoproceso tip on tip.idtipoproceso = pc.idTipoPrestamo where pc.cuotFechaPago <=curdate() and not pc.idTipoPrestamo in (43, 80) and i.idTipoCliente=1";
+		$resultado=$cadena->query($sql);
+		?> 
+		<thead>
+				<tr>
+					<th>Fecha</th>
+					<th>Préstamo</th>
+					<th>Cliente</th>
+					<th>Celular</th>
+					<th>Proceso</th>
+					<th>Deuda</th>
+					<th>Pagó</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+	<? while($row=$resultado->fetch_assoc()){ 
+		$sumaTodo = $sumaTodo + $row['cuotCuota']; ?>
+			<tr>
+				<td><? $fechaCaj= new DateTime($row['cuotFechaPago']); echo $fechaCaj->format('d/m/Y');?></td>
+				<td><a href="creditos.php?credito=<?= $base58->encode('000'.$row['idPrestamo']);?>">CR-<?= '000'.$row['idPrestamo'];?></a></td>
+				<td class='mayuscula'><a href="clientes.php?idCliente=<?=$base58->encode($row['idCliente']); ?>"><?= $row['cliNombres'];?></a></td>
+				<td><?= $row['cliCelularPersonal']?></td>
+				<td><?= $row['tipoDescripcion']?></td>
+				<td>S/ <?= number_format($row['cuotCuota'],2);?></td>
+				<td>S/ <?= number_format($row['cuotPago'],2);?></td>
+			</tr>
+	<? } //end de while ?> 
+			</tbody>
+			<tfoot>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<th>S/ <?= number_format($sumaTodo,2);?></th>
+				<td></td>
+			</tfoot>
+		<?
+		break;
 	default:
 		# code...
 		break;
