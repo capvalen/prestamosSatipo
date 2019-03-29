@@ -20,7 +20,7 @@ $codCredito='';
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>Créditos - Sistema Préstamos</title>
+		<title>Créditos - CrediBalbin Sistema Préstamos</title>
 
 		<!-- Bootstrap Core CSS -->
 		<?php include 'headers.php'; ?>

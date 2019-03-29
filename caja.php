@@ -8,7 +8,7 @@ if (!isset($_GET['fecha'])) { //si existe lista fecha requerida
 <html lang="es">
 
 <head>
-	<title>Caja: PeruCash</title>
+	<title>Caja: CrediBalbin Sistema Préstamos </title>
 	<?php include "headers.php";
 	include "php/variablesGlobales.php"; ?>
 </head>
