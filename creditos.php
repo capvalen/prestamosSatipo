@@ -443,6 +443,7 @@ $codCredito='';
 					<th>Periodo</th>
 					<th>Interés</th>
 					<th>Desembolso</th>
+					<th>Cuot. Venc.</th>
 					<th>Prenda</th>
 				</tr>
 			</thead>
