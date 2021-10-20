@@ -11,11 +11,12 @@ inner join usuario u on u.idUsuario = pre.idUsuario
 inner join tipoprestamo tpr on tpr.idTipoPrestamo = pre.idTipoPrestamo
 	where presActivo =1 and presFechaDesembolso <> '0000-00-00 00:00:00' and presAprobado =1 and i.idTipoCliente=1
 	order by pre.idPrestamo asc;";
-$resultado=$cadena->query($sql);
+$resultado=$cadena->query($sql); $i=0;
 while($row=$resultado->fetch_assoc()){ 
 	$fecha = new DateTime($row['presFechaDesembolso']);
 	?>
 	<tr>
+        <td><?= $i+1;?></td>
 		<td><a href="creditos.php?credito=<?= $base58->encode($row['idPrestamo']);?>">CR-<?= $row['idPrestamo'];?></a></td>
 		<td class="mayuscula"><a href="clientes.php?idCliente=<?= $base58->encode($row['idCliente']); ?>"><?= $row['cliNombres'];?></a></td>
 		<td><?= $row['tpreDescipcion'];?></td>
@@ -26,5 +27,5 @@ while($row=$resultado->fetch_assoc()){
 		<td class="<?php if($row['deudasVenc']>0){ echo "red-text";}else{ echo "blue-text text-accent-4";} ?>" ><?= $row['deudasVenc'];?></td>
 		<td class="mayuscula"><?php if($row['prendaSimple']==''){echo '-';}else{echo $row['prendaSimple'];}?></td>
 	</tr>
-<? }
+<? $i++; }
 ?>

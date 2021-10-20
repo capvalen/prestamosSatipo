@@ -27,25 +27,26 @@ include "php/variablesGlobales.php";
 	<!-- Sidebar -->
 	<?php include 'menu-wrapper.php' ?>
 	<!-- /#sidebar-wrapper -->
-<!-- Page Content -->
-<div id="page-content-wrapper">
-	<div class="container-fluid ">
-		<div class="row noselect">
-			<div class="col-lg-12 contenedorDeslizable ">
-			<!-- Empieza a meter contenido principal -->
-			<h2 class="purple-text text-lighten-1">Registro de Clientes, Productos y Compras <small><?php print $_COOKIE["ckAtiende"]; ?></small></h2><hr>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid ">
+            <div class="row noselect">
+                <div class="col-lg-12 contenedorDeslizable ">
+                <!-- Empieza a meter contenido principal -->
+                <h2 class="purple-text text-lighten-1">Registro de Clientes, Productos y Compras <small><?php print $_COOKIE["ckAtiende"]; ?></small></h2><hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-				
-			<!-- Fin de contenido principal -->
-			</div>
-		</div>
-</div>
+
+                <!-- Fin de contenido principal -->
+                </div>
+            </div>
+        </div>
+    </div>
 <!-- /#page-content-wrapper -->
 </div><!-- /#wrapper -->
 

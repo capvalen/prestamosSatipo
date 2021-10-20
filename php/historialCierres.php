@@ -1,4 +1,4 @@
-<select name="" id="sltHistorialCierres" class="form-control" >
+<select name="" id="sltHistorialCierres" class="form-control mayuscula" >
 <option class="optMovesBox" value="0">Historial de cuadres</option>
 <?php 
 include 'conkarl.php';
@@ -16,7 +16,7 @@ while($row = $llamadoSQL->fetch_assoc()):
   else{ $fechaFinal = ' - '.date( 'g:i a', strtotime($row['fechaFin'])); }
   ?>
   
-  <option class="optMovesBox" value="<?= $row['idCuadre'] ?>" ><?= $row['usuNombres'].' ('.date( 'g:i a', strtotime($row['fechaInicio'])).$fechaFinal.")"; ?></option>
+  <option class="optMovesBox mayuscula" value="<?= $row['idCuadre'] ?>" ><?= $row['usuNombres'].' ('.date( 'g:i a', strtotime($row['fechaInicio'])).$fechaFinal.")"; ?></option>
 <?php 
 endwhile;
 ?>

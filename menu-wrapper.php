@@ -50,19 +50,13 @@ $nomArchivo = basename($_SERVER['PHP_SELF']); ?>
 					</button>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse ">
-					<ul class="nav navbar-nav">
-						<li class="hidden down"><a href="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">HR <span class="caret"></span></a>
-								<ul class="dropdown-menu">
-										<li><a href="#">Change Time Entry</a></li>
-										<li><a href="#">Report</a></li>
-								</ul>
-							</li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right " style="padding:0 30px;">
+					
+					<ul class="nav navbar-nav navbar-right " >
 						 <li>
-							<div class="btn-group has-clear "><label for="txtBuscarNivelGod" class="text-muted visible-xs" style="color:white;">Buscar algo:</label>
-								<input type="text" class="form-control" id="txtBuscarNivelGod" placeholder="&#xed11;">
-								<span class="form-control-clear icofont icofont-close form-control-feedback hidden" style="color:#777;padding-top: 9px;"></span>
+							<div class="btn-group has-clear ">
+								<label for="txtBuscarNivelGod" class="text-muted visible-xs" style="color:white;">Buscar algo:</label>
+								<input type="text" class="form-control" id="txtBuscarNivelGod" placeholder="&#xed11;" autocomplete="off">
+								<span class="form-control-clear icofont icofont-close form-control-feedback hidden" style="color:#777;padding-top: 15px;"></span>
 							</div>
 						 </li>
 						 <li class="dropdown" id="liDatosPersonales">

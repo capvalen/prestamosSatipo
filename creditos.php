@@ -436,6 +436,7 @@ $codCredito='';
 			<table class="table table-hover" id="tableCreditosTodos">
 			<thead>
 				<tr>
+					<th>N°</th>
 					<th>Crédito</th>
 					<th>Cliente</th>
 					<th>Tipo</th>
@@ -455,7 +456,7 @@ $codCredito='';
 			</div>
 		</div>
 </div>
-</div></div>
+</div>
 <!-- /#page-content-wrapper -->
 </div><!-- /#wrapper -->
 	

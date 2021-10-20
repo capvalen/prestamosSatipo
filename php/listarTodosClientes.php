@@ -16,7 +16,7 @@
 
 <?php 
 require("conkarl.php");
-$sql = mysqli_query($conection,"SELECT c.*, a.addrDireccion, a.addrNumero, ec.civDescripcion FROM `cliente` c inner join address a on a.idAddress = c.cliDireccionCasa inner join estadocivil ec on c.idEstadoCivil = ec.idEstadoCivil where cliActivo=1");
+$sql = mysqli_query($conection,"SELECT c.*, a.addrDireccion, a.addrNumero, ec.civDescripcion FROM `cliente` c inner join address a on a.idAddress = c.cliDireccionCasa inner join estadocivil ec on c.idEstadoCivil = ec.idEstadoCivil where cliActivo=1 order by c.idCliente desc limit 10; ");
 $botonMatri='';
 while($row = mysqli_fetch_array($sql, MYSQLI_ASSOC))
 { ?>
