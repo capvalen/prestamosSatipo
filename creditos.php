@@ -1041,6 +1041,9 @@ $('#btnRealizarDeposito').click(function() {
 					for(i=1; i<data.length; i++){$('#h1Bien2').append(`<span data-quees='${data[i].queEs}' data-monto='${data[i].montoCuota}' data-id='${data[i].cuota}'>SP-`+ data[i].cuota +`: S/ `+ parseFloat(data[i].montoCuota).toFixed(2) +`</span><br>`);}
 				}
 				$('#modalGuardadoCorrecto2').modal('show');
+				$('#modalGuardadoCorrecto2').on('hidden.bs.modal', function () { 
+					location.reload();
+				});
 				
 			}
 			// if(resp==true){

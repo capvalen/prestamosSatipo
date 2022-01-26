@@ -92,7 +92,7 @@ a:focus, a:hover { color: #62286f; }
 				</div>
 				
 				<div class=" panel panel-default" id="divEntradas">
-					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Producto</th> <th>Motivo de ingreso</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th> <th>Obs.</th> </tr> </thead>
+					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Motivo</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th> </tr> </thead>
 					<tbody>
 					<?php
 					if( ! isset($_GET['cuadre']) ):
@@ -119,7 +119,7 @@ a:focus, a:hover { color: #62286f; }
 					<?php } ?>
 				</div>
 				<div class=" panel panel-default " id="divSalidas">
-					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Producto</th> <th>Motivo de egreso</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th> <th>Obs.</th> </tr> </thead>
+					<table class="table table-hover">  <thead> <tr> <th>#</th> <th>Producto</th> <th>Motivo de egreso</th> <th>Usuario</th> <th>Cantidad</th> <th>Moneda</th></tr> </thead>
 					<tbody>
 					<?php
 						if( ! isset($_GET['cuadre']) ):
@@ -413,10 +413,10 @@ function calculoTicketVirtual() {
 		$('#spanSobra').text('Cuadre exacto');
 	}
 	if(sobra <0){
-		$('#spanSobra').text('Falta S/ '+ (0-sobra).toFixed(2));		
+		$('#spanSobra').text('Sobra S/ '+ (0-sobra).toFixed(2));		
 	}
 	if(sobra > 0){
-		$('#spanSobra').text('Sobra S/ '+ sobra.toFixed(2));		
+		$('#spanSobra').text('Falta S/ '+ sobra.toFixed(2));		
 	}
 	
 	//$('#spanResultadoFinal').text(parseFloat( parseFloat($('#strSumaEntrada').text().replace(',', '.')) - parseFloat($('#strSumaSalida').text().replace(',', '.')) + parseFloat($('#spanApertura').text().replace(',', '.')) ).toFixed(2));

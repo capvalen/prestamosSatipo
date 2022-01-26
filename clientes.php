@@ -506,7 +506,7 @@ $('#btnGuardarClienteUpd').click(function() {
 		var hijos =0;
 		if( $('#txtNumHijosUpd').val()=='' ){hijos = $('#txtNumHijosUpd').val();}
 		var jClienteupd = {
-			idCliente: <?php if(isset($_GET['idCliente'])){ echo $idCli;}else{ echo '""';}?>,
+			idCliente: '<?php if(isset($_GET['idCliente'])){ echo $idCli;} ?>',
 			dni: $('#txtDniClienteUpd').val(),
 			apellidoPaterno: $('#txtPaternoClienteUpd').val(),
 			apellidoMaterno: $('#txtMaternoClienteUpd').val(),

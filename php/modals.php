@@ -230,25 +230,7 @@
 		</div>
 	</div>
 </div>
-<div class='modal fade' id='modalDenegarCredito' tabindex='-1' role='dialog' aria-hidden='true'>
-	<div class='modal-dialog modal-sm' >
-	<div class='modal-content '>
-		<div class='modal-header-danger'>
-			<button type='button' class='close' data-dismiss='modal' aria-label='Close' ><span aria-hidden='true'>&times;</span></button>
-			<h4 class='modal-tittle'> Denegar crédito</h4>
-		</div>
-		<div class='modal-body'>
-			<p>Está seguro que desea denegar éste Crédito <strong>«CR-<?= $codCredito; ?>»</strong></p>
-			<p>Ingrese un motivo para cancelarlo.</p>
-			<input type="text" id="txtDenegarRazon" class="form-control">
-		</div>
-		<div class='modal-footer'>
-			<button type='button' class='btn btn-default' data-dismiss='modal'><i class="icofont-close-circled"></i> Cerrar</button>
-			<button type='button' class='btn btn-success btn-outline' id='btnDenegarCredito'><i class="icofont-check-circled"></i> Denegar crédito</button>
-		</div>
-		</div>
-	</div>
-</div>
+
 <?php endif;
 
 if( in_array($_COOKIE['ckPower'], $admis) ){ ?>
@@ -270,4 +252,24 @@ if( in_array($_COOKIE['ckPower'], $admis) ){ ?>
 		</div>
 	</div>
 </div>
+
+<div class='modal fade' id='modalDenegarCredito' tabindex='-1' role='dialog' aria-hidden='true'>
+	<div class='modal-dialog modal-sm' >
+	<div class='modal-content '>
+		<div class='modal-header-danger'>
+			<button type='button' class='close' data-dismiss='modal' aria-label='Close' ><span aria-hidden='true'>&times;</span></button>
+			<h4 class='modal-tittle'> Denegar crédito</h4>
+		</div>
+		<div class='modal-body'>
+			<p>Está seguro que desea denegar éste Crédito <strong>«CR-<?= $codCredito; ?>»</strong></p>
+			<p>Ingrese un motivo para cancelarlo.</p>
+			<input type="text" id="txtDenegarRazon" class="form-control">
+		</div>
+		<div class='modal-footer text-right'>
+			<button type='button' class='btn btn-danger btn-outline' id='btnDenegarCredito'><i class="icofont-close-circled"></i> Denegar crédito</button>
+		</div>
+		</div>
+	</div>
+</div>
+
 <?php } ?>
