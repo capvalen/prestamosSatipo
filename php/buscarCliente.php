@@ -32,6 +32,7 @@ if($cantRow>0){
       <td><?= ucwords($row['addrDireccion']); ?></td>
       <td><?= $row['cliCelularPersonal']; ?></td>
       <td><?= $row['civDescripcion']; ?></td>
+      <td><?php if($row['judicializado']): ?> <span class="text-danger">Si</span> <?php else: ?> <span class="text-primary">No</span> <?php endif; ?></td>
       <td> <?php echo $botonMatri;?> </td>
     </tr>
   <?php

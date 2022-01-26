@@ -10,7 +10,7 @@ $sumaTodo=0; $sumaRecup =0; $sumaGananc=0;
 
 switch ($_POST['caso']) {
 	case 'R1':
-		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso  FROM `caja` c left join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso where cajaFecha between '{$_POST['fInicio']} 00:00' and '{$_POST['fFinal']} 23:59:59' and c.idTipoProceso in (31, 81, 80, 33) and cajaActivo = 1 order by idPrestamo;";
+		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso  FROM `caja` c left join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso where cajaFecha between '{$_POST['fInicio']} 00:00' and '{$_POST['fFinal']} 23:59:59' and c.idTipoProceso in (31, 33, 80, 81) and cajaActivo = 1 order by idPrestamo;";
 		
 		$resultado=$cadena->query($sql);
 		?> 
@@ -194,6 +194,55 @@ switch ($_POST['caso']) {
 			</tfoot>
 		<?
 		break;
+	case 'R5':
+		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, c.cajaFecha, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso, cajaObservacion  
+		FROM `caja` c left join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso 
+		where date_format(cajaFecha, '%Y-%m-%d') BETWEEN '{$_POST['fInicio']}' and '{$_POST['fFinal']}' and c.idTipoProceso in (21, 31, 32, 33, 44, 75, 45, 80, 81,    43,85,84,83,85 ,82,40,41) and cajaActivo = 1
+		order by cajaFecha, idPrestamo;";
+
+		$aSumar=[21, 31, 32, 33, 44, 75, 45, 80, 81];
+
+		$resultado=$cadena->query($sql);
+		?> 
+		<thead>
+			<tr>	
+				<th>Fecha-Hora</th>
+				<th>Cod. Pre.</th>
+				<th>ID Cuota</th>
+				<th>Proceso</th>
+				<th>Valor</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php
+
+		while($row=$resultado->fetch_assoc()){ ?>
+			<tr>
+				<td><?= $row['cajaFecha']; ?></td>
+				<td><?= "CR-{$row['idPrestamo']}"; ?></td>
+				<td><?= $row['idCuota']; ?></td>
+				<td><?= $row['tipoDescripcion']; ?><?php if($row['cajaObservacion']<>''): echo"<br><em class='mayuscula'>{$row['cajaObservacion']}</em>"; endif; ?></td>
+				
+				<?php if( in_array($row['idtipoProceso'], $aSumar) ): $sumaTodo+=floatval($row['cajaValor']); ?>
+					<td class="text-primary">+<?= number_format($row['cajaValor'],2); ?></td>
+				<?php else: $sumaTodo-=floatval($row['cajaValor']); ?>
+					<td class="text-danger">-<?= number_format($row['cajaValor'],2); ?></td>
+				<?php endif; ?>
+			</tr>
+		<?php
+		}?> 
+		</tbody>
+		<tfoot>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<th>S/ <?= number_format($sumaTodo,2);?></th>
+				<td></td>
+			</tfoot>
+		<?php
+
+		 echo $sql;
 	default:
 		# code...
 		break;

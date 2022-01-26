@@ -11,13 +11,12 @@
                     <div class="row">
                         <img src="images/path4585.png?ver=1.1" class="img-responsive" alt=""><br>
                         <p class="text-center blue-text text-darken-1" id="tituloPeque"><em>Información guardada</em></p>
-                        <p class="text-center blue-text text-darken-1"><span id="spanBien"></span><h1 class="text-center blue-text text-darken-1" id="h1Bien"></h1></p>
+                        <p class="text-center blue-text text-darken-1"><span id="spanBien"></span><h2 class="text-center blue-text text-darken-1" id="h1Bien"></h2></p>
+												<div class="text-right"><button class="btn btn-primary btn-outline" data-dismiss="modal" ><i class="icofont-smugmug"></i> Bien</button></div>
+
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-primary btn-outline" data-dismiss="modal" ><i class="icofont-smugmug"></i> Bien</button>
-                </div>
            </div>
         </div>
     </div>
@@ -34,13 +33,12 @@
 		<div class="modal-body">
 			<div class="container-fluid">
 			<div class="row">
-			<p><i class="icofont-cat-alt-3"></i> <strong>Ups!</strong> Lo sentimos, <span id="spanMalo"></span></p>
-			<p>Comunícalo al área de Informática.</p>
+				<p><i class="icofont-cat-alt-3"></i> <strong>Ups!</strong> Lo sentimos, <span id="spanMalo"></span></p>
+				<p>Comunícalo al área de Informática.</p>
 			</div>
-		</div>
-			
-		<div class="modal-footer">
-			<button class="btn btn-danger btn-outline" data-dismiss="modal" ><i class="icofont icofont-warning-alt"></i> Ok</button>
+			<div class="text-right">
+				<button class="btn btn-danger btn-outline" data-dismiss="modal" ><i class="icofont icofont-warning-alt"></i> Ok</button>
+			</div>
 		</div>
 	</div>
 	</div>

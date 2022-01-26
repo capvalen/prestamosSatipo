@@ -64,7 +64,7 @@ $codCredito='';
 	u.usuNombres, preInteresPers,
 	case presFechaDesembolso when '0000-00-00' then 'Desembolso pendiente' else presFechaDesembolso end as `presFechaDesembolso`,
 	case presAprobado when 0 then 'Sin aprobar' when 2 then 'Rechazado' else 'Aprobado' end as `presAprobado`, 
-	case when ua.usuNombres is Null then '-' else ua.usuNombres end  as `usuarioAprobador`, pre.idTipoPrestamo, prendaSimple
+	case when ua.usuNombres is Null then '-' else ua.usuNombres end  as `usuarioAprobador`, pre.idTipoPrestamo, prendaSimple, rematado, presActivo, precioRemate
 	FROM `prestamo` pre
 	inner join usuario u on u.idUsuario = pre.idUsuario
 	left join usuario ua on ua.idUsuario = pre.idUsuarioAprobador
@@ -92,8 +92,13 @@ $codCredito='';
 		<div class="container-fluid" id="contenedorCreditosFluid">
 			<p><strong>Datos de crédito</strong></p>
 			<div class="row">
-				<div class="col-sm-2"><label for="">Verificación</label><p><?= $rowCr['presAprobado']; ?></p></div>
-				<div class="col-sm-2"><label for="">Verificador</label><p><?= $rowCr['usuarioAprobador']; ?></p></div>
+				<div class="col-sm-2"><label for="">Estado</label><p><strong>
+						<?php if($rowCr['rematado']==1): echo 'Rematado por '. number_format($rowCr['precioRemate'],2);
+						elseif($rowCr['presActivo']== 2): echo 'Finalizado';
+						else: echo $rowCr['presAprobado']; endif; ?>
+				</strong></p>
+				</div>
+				<div class="col-sm-2"><label for="">Verificador</label><p class="mayuscula"><?= $rowCr['usuarioAprobador']; ?></p></div>
 				<div class="col-sm-2"><label for="">Fecha préstamo</label><p><?php $fechaAut= new DateTime($rowCr['presFechaAutom']); echo $fechaAut->format('j/m/Y h:m a'); ?></p></div>
 				<div class="col-sm-2"><label for="">Fecha desemboslo</label><p><?php if($rowCr['presFechaDesembolso']=='Desembolso pendiente'){echo $rowCr['presFechaDesembolso'];}else{$fechaDes= new DateTime($rowCr['presFechaDesembolso']); echo $fechaDes->format('j/m/Y h:m a');} ?></p></div>
 			</div>
@@ -101,7 +106,7 @@ $codCredito='';
 				<div class="col-sm-2"><label for="">Desembolso</label><p>S/ <?= number_format($rowCr['presMontoDesembolso'],2); ?></p> <span class="hidden" id="spanMontoDado"><?= $rowCr['presMontoDesembolso']; ?></span></div>
 				<div class="col-sm-2"><label for="">Meses</label><p><?= $rowCr['tpreDescipcion']; ?></p></div>
 				<div class="col-sm-2"><label for="">Interés</label><p><?= $rowCr['preInteresPers']."%"; ?></p></div>
-				<div class="col-sm-2"><label for="">Analista</label><p><?= $rowCr['usuNombres']; ?></p></div>
+				<div class="col-sm-2"><label for="">Analista</label><p class="mayuscula"><?= $rowCr['usuNombres']; ?></p></div>
 				<div class="col-sm-4"><label for="">Prenda</label><p class="mayuscula"><?= $rowCr['prendaSimple']; ?></p></div>
 			</div>
 			</div>
@@ -131,21 +136,25 @@ $codCredito='';
 			<div class="container row" id="rowBotonesMaestros">
 				<div class="col-xs-12 col-md-6">
 					<button class="btn btn-negro btn-outline" id="btnImpresionPrevia" data-pre="<?= $_GET['credito'];?>"><i class="icofont-print"></i> Imprimir cronograma</button>
-				<?php if(isset($_GET['credito']) && $rowCr['presAprobado']== 'Sin aprobar'): ?>
+				<?php if(isset($_GET['credito']) && $rowCr['presAprobado']== 'Sin aprobar' && $rowCr['presActivo']==1): ?>
 					<button class="btn btn-success btn-outline " id="btnShowVerificarCredito"><i class="icofont-check-circled"></i> Aprobar crédito</button>
 					<button class="btn btn-danger btn-outline " id="btnDenyVerificarCredito"><i class="icofont-thumbs-down"></i> Denegar crédito</button>
 				<?php else: 
-					if( in_array( $_COOKIE['ckPower'], $soloAdmis) &&  $rowCr['presAprobado']<>"Rechazado"):?>
+					if( in_array( $_COOKIE['ckPower'], $soloAdmis) &&  $rowCr['presAprobado']<>"Rechazado" && $rowCr['presActivo']==1):?>
 					<button class="btn btn-rojoFresa btn-outline" id="btnAnularCredito"><i class="icofont-ui-delete"></i> Anular crédito</button>
 				<?php endif; endif; ?>
 				</div>
 
 			<?php if(isset($_GET['credito']) && $rowCr['presAprobado']<> 'Sin aprobar' && $rowCr['presAprobado']<> "Rechazado" && in_array($_COOKIE['ckPower'], $soloAdmis)): ?>
-			<?php if( $hayCaja==true ):
+			<?php if( $hayCaja==true):
 				if($rowCr['presFechaDesembolso']=='Desembolso pendiente'): ?>
 				<button class="btn btn-warning btn-outline" id="btnDesembolsar"><i class="icofont-money"></i> Desembolsar</button>
-			<?php else:?>
+			<?php elseif($rowCr['presActivo']==1):  ?>
 				<button class="btn btn-infocat btn-outline" id="btnsolicitarDeuda"><i class="icofont-money"></i> Pago global</button>
+				<?php
+				if($rowCr['rematado']==0){ ?>
+				<button class="btn btn-warning btn-outline" id="btnRematarProd"><i class="icofont-money"></i> Rematar</button>
+				<?php } ?>
 			<?php endif; ?>
 			<?php else: ?> 
 				<div class="col-xs-12 col-md-6"><br>
@@ -241,17 +250,20 @@ $codCredito='';
 					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'): echo "Desembolso"; elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; else: echo $rowCuot['cuotFechaCancelacion']; endif;  ?></td>
 					<td class="tdPagoCli" data-pago="<?= number_format($rowCuot['cuotPago'],2); ?>"><? if($k>=1) {echo number_format($rowCuot['cuotPago'],2);} ?></td>
 					<td class="hidden"><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
-					<td><?php if( in_array($_COOKIE['ckPower'], $soloAdmis) &&  $rowCuot['idTipoPrestamo']=='79' && $rowCr['presFechaDesembolso']<>'Desembolso pendiente' && $k>=1):
+					<td><?php
+					if( in_array($_COOKIE['ckPower'], $soloAdmis) &&  $rowCuot['idTipoPrestamo']=='79' && $rowCr['presFechaDesembolso']<>'Desembolso pendiente' && $k>=1):
 					$diasDebe2=$fechaHoy ->diff($fechaCu);
-					if( $rowCr['presAprobado']== "Rechazado" ){ ?>
-						<p class="red-text text-darken-1">Rechazado</p>
-					<?php } else{
-						if( floatval($diasDebe2->format('%R%a')) < 0 ){
-						?> <p class="red-text text-darken-1">Cuota fuera de fecha (<?= $diasDebe2->format('%a').' días';?>)</p>
-						<!-- <button class="btn btn-primary btn-outline btn-sm btnPagarCuota"><i class="icofont-money"></i> Pagar</button> --> <?php
-						}else{
-							?> <p class="blue-text text-accent-2">Cuota en buena fecha</p><?php
-						}
+						if( $rowCr['presAprobado']== "Rechazado" ){ ?>
+							<p class="red-text text-darken-1">Rechazado</p>
+						<?php } else{
+							if($rowCr['presActivo']==1){
+								if( floatval($diasDebe2->format('%R%a')) < 0 ){
+									?> <p class="red-text text-darken-1">Cuota fuera de fecha (<?= $diasDebe2->format('%a').' días';?>)</p>
+									<!-- <button class="btn btn-primary btn-outline btn-sm btnPagarCuota"><i class="icofont-money"></i> Pagar</button> --> <?php
+								}else{
+										?> <p class="blue-text text-accent-2">Cuota en buena fecha</p><?php
+								}
+							}
 						}
 						endif;
 						if($rowCuot['cuotPago']<>'0.00' && $rowCr['presFechaDesembolso']<>'Desembolso pendiente'): 
@@ -481,6 +493,24 @@ $codCredito='';
 				<tbody id="rowClientesEncontrados">
 				</tbody>
 			</table>
+		</div>
+	</div>
+</div>
+</div>
+<!-- Modal para saber monto de remate -->
+<div class="modal fade" id="modalRemate" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal-dialog modal-sm" role="document">
+	<div class="modal-content">
+		<div class="modal-header-indigo">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"><i class="icofont icofont-help-robot"></i> Rematar</h4>
+		</div>
+		<div class="modal-body">
+			<label for="">Precio de remate, para ser ingresado a caja</label>
+			<input class="form-control text-center" type="number" name="" value="0.00" id="txtValorRemate">
+			<div class="text-right">
+				<button class="btn btn-primary btn-outline" onclick="realizarRemate()"><i class="icofont icofont-paper"></i> Rematar</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -837,15 +867,21 @@ $('#dtpFechaIniciov3').change(function() {
 });
 <?php if(isset( $_GET['credito'])): ?>
 $('#btnDesembolsar').click(function() {
-	$.ajax({url: 'php/updateDesembolsoDia.php', type: 'POST', data:{ credito: '<?= $_GET['credito'];?>' }}).done(function(resp) {
-		console.log(resp)
-		if(resp==true){
-			//location.reload();
-			var seguro = parseFloat($('#spanMontoDado').text()*0.015).toFixed(2);
-			$('#h1Bien').html(`Cobre S/ ${seguro} de seguro al cliente.`);
-			$('#modalGuardadoCorrecto').modal('show');
-		}
-	});
+	if(confirm('¿Desea desembolsar el crédito?')){
+		$.ajax({url: 'php/updateDesembolsoDia.php', type: 'POST', data:{ credito: '<?= $_GET['credito'];?>' }}).done(function(resp) {
+			console.log(resp)
+			if(resp==true){
+				//location.reload();
+				/* var seguro = parseFloat($('#spanMontoDado').text()*0.015).toFixed(2);
+				$('#h1Bien').html(`Cobre S/ ${seguro} de seguro al cliente.`); */
+				$('#h1Bien').html(`El crédito se aperturó correctamente`);
+				$('#modalGuardadoCorrecto').modal('show');
+				$('#modalGuardadoCorrecto').on('hidden.bs.modal', function () { 
+					location.reload();
+				});
+			}
+		});
+	}
 });
 $('#chkExonerar').change(function(){
 	
@@ -896,7 +932,29 @@ $('.spanPrint').click(function() {
 		break;
 	}
 });
-<?php endif; ?>
+<?php endif; 
+if($rowCr['rematado']==0){
+?> 
+$('#btnRematarProd').click(function() {
+	$('#modalRemate').modal('show');
+	
+});
+function realizarRemate(){
+	$('#modalRemate').modal('hide');
+
+	if(confirm('¿Desea rematar y finalizar el préstamo?')){
+		$.ajax({url: 'php/rematarProducto.php', type: 'POST', data: { credito: '<?= $_GET['credito'];?>', valor: $('#txtValorRemate').val() }}).done(function(resp) {
+			if(resp=='ok'){
+				location.reload();
+			}else{
+				$('.modal-GuardadoError').modal('show');
+			}
+		});
+	}
+}
+<?php
+}
+?>
 <?php if(isset($_GET['credito']) && $rowCr['presAprobado']=== 'Sin aprobar'): ?>
 $('#btnShowVerificarCredito').click(function() {
 	$('#modalVerificarCredito').modal('show');

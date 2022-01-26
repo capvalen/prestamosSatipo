@@ -47,6 +47,7 @@ include "php/variablesGlobales.php";
 						<option value="R4" class="optReporte">Clientes con moras</option>
 						<option value="R1" class="optReporte">Movimientos de entrada</option>
 						<option value="R2" class="optReporte">Movimientos de Salida</option>
+						<option value="R5" class="optReporte">Cuadro de ganancias</option>
 
 					</select>
 				</div>

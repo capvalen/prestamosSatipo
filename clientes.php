@@ -67,6 +67,7 @@ $base58 = new StephenHill\Base58();?>
 							<th>Dirección</th>
 							<th>Celular</th>
 							<th>Estado civil</th>
+							<th>Judicializado</th>
 							<th>@</th>
 						</tr>
 					</thead>
@@ -89,7 +90,7 @@ $base58 = new StephenHill\Base58();?>
 				lower(di.distrito) as distrito, lower(pro.provincia) as provincia, lower(de.departamento) as departamento,
 				lower(can.calDescripcion) as ncalDescripcion, lower(an.addrDireccion) as naddrDireccion, lower(an.addrReferencia) as naddrReferencia, an.addrNumero as naddrNumero, 
 				lower(din.distrito) as ndistrito, lower(pron.provincia) as nprovincia, lower(den.departamento) as ndepartamento,
-				`cliCelularPersonal`, `cliCelularReferencia`, ec.civDescripcion, `cliActivo`
+				`cliCelularPersonal`, `cliCelularReferencia`, ec.civDescripcion, `cliActivo`, judicializado
 				FROM `cliente` c
 				inner join address a on a.idAddress= c.`cliDireccionCasa`
 				inner join distrito di on di.idDistrito = a.idDistrito
@@ -112,20 +113,29 @@ $base58 = new StephenHill\Base58();?>
 				<h4>Cliente CL-<?= $idCli ?></h4>
 
 				<div class="container-fluid row">
-				<div class="col-sm-3">
-					<p><strong>D.N.I.:</strong> <span class="mayuscula"><?= $rowDato['cliDni']; ?></span></p>
-					<p><strong>Sexo:</strong> <span class="mayuscula"><?php if($rowDato['cliSexo']==0): echo 'Femenino'; else: echo 'Masculino'; endif; ?></span></p>
-					<p><strong>Celular Personal:</strong> <span><?= $rowDato['cliCelularPersonal']; ?></span></p>
-				</div>
-				<div class="col-sm-3">
-					<p><strong>Apellidos:</strong> <span class="mayuscula"><?= $rowDato['cliApellidoPaterno'].' '.$rowDato['cliApellidoMaterno']; ?></span></p>
-					<p><strong>N° Hijos:</strong> <span class="mayuscula"><?= $rowDato['cliNumHijos']; ?></span></p>
-					<p><strong>Celular Referencial:</strong> <span><?= $rowDato['cliCelularReferencia']; ?></span></p>
-				</div>
-				<div class="col-sm-3">
-				<p><strong>Nombres:</strong> <span class="mayuscula"><?= $rowDato['cliNombres']; ?></span></p>
-				<p><strong>Cónyugue:</strong> <span id="pConyug"></span> </p>
-				</div>
+					<div class="col-sm-3">
+						<p><strong>D.N.I.:</strong> <span class="mayuscula"><?= $rowDato['cliDni']; ?></span></p>
+						<p><strong>Sexo:</strong> <span class="mayuscula"><?php if($rowDato['cliSexo']==0): echo 'Femenino'; else: echo 'Masculino'; endif; ?></span></p>
+						<p><strong>Celular Personal:</strong> <span><?= $rowDato['cliCelularPersonal']; ?></span></p>
+					</div>
+					<div class="col-sm-3">
+						<p><strong>Apellidos:</strong> <span class="mayuscula"><?= $rowDato['cliApellidoPaterno'].' '.$rowDato['cliApellidoMaterno']; ?></span></p>
+						<p><strong>N° Hijos:</strong> <span class="mayuscula"><?= $rowDato['cliNumHijos']; ?></span></p>
+						<p><strong>Celular Referencial:</strong> <span><?= $rowDato['cliCelularReferencia']; ?></span></p>
+					</div>
+					<div class="col-sm-3">
+						<p><strong>Nombres:</strong> <span class="mayuscula"><?= $rowDato['cliNombres']; ?></span></p>
+						<p><strong>Cónyugue:</strong> <span id="pConyug"></span> </p>
+						<div class="checkbox checkbox-danger">
+						<?php if( $rowDato['judicializado']==1): ?>
+							<input id="chkJudicial" type="checkbox" checked >
+							<label for="chkJudicial"> Sí, judicializado </label>
+						<?php else: ?>
+							<input id="chkJudicial" type="checkbox" >
+							<label for="chkJudicial"> No judicializado </label>
+						<?php endif; ?>
+						</div>
+					</div>
 				</div> <!-- fin de row -->
 				<div class="container-fluid row">
 					<div class="col-sm-12">
@@ -247,8 +257,8 @@ $base58 = new StephenHill\Base58();?>
 				<div class="row container-fluid hidden" id="divDireccionNegocioUpd">
 				<label style="display: table;">Dirección de negocio</label>
 					<div class="col-xs-3" id="divCallesNegUpd"><select id="slpCallesNegUpd" class="selectpicker" data-width="100%" data-live-search="true"  data-size="15" title="Calle"><?php include 'php/OPTCalles.php'; ?></select></div>
-				    
-				    <div class="col-xs-12 col-sm-7"><input type="text" class="form-control mayuscula" id="txtDireccionNegocioUpd" placeholder='Dirección de negocio' autocomplete='nope'></div>
+						
+						<div class="col-xs-12 col-sm-7"><input type="text" class="form-control mayuscula" id="txtDireccionNegocioUpd" placeholder='Dirección de negocio' autocomplete='nope'></div>
 						<div class="col-xs-2"><input type="text" class="form-control mayuscula" id="txtNumeroNegocUpd" placeholder='#' autocomplete='nope'></div>
 						<div class="col-xs-4"  id="divDireccionExtraNegUpd"><select class="selectpicker" title="Zona" id="sltDireccionExtraNegocUpd" data-width="100%" data-live-search="true" data-size="15"><?php include 'php/OPTZona.php'; ?></select></div>
 						<div class="col-xs-8"><input type="text" id='txtReferenciaNegocUpd' class='form-control mayuscula' placeholder='Referencia del negocio' autocomplete='nope'></div>
@@ -287,7 +297,8 @@ datosUsuario();
 $(document).ready(function(){
 	$('.selectpicker').selectpicker();
 	<? if(isset($_GET['idCliente'])):?>
-	agregarClienteCanasta('<?= $idCli; ?>', 1);
+		
+		agregarClienteCanasta('<?= $idCli; ?>', 1);
 	<? endif;?>
 	$('#slpDepartamentos').change(function() {
 		var depa = $('.optDepartamento:contains("'+$('#slpDepartamentos').val()+'")').attr('data-tokens');  //$('#divDepartamentos').find('.selected a').attr('data-tokens');
@@ -319,9 +330,24 @@ $('#btnAddClientes').click(function() {
 	$('#txtDniCliente').val('');
 	$('#modalNewCliente').modal('show');
 });
+$('#chkJudicial').click(function() {
+	if($('#chkJudicial').prop('checked')){
+		$('#chkJudicial').next().text('Sí, judicializado');
+	}else{
+		$('#chkJudicial').next().text('No judicializado');
+	}
+	$.post('php/actualizarJudicial.php', { estado: $('#chkJudicial').prop('checked'), idCli: '<?= $idCli; ?>' }).done(resp=>{
+		if( resp=='ok' ){
+			$('#h1Bien').html(`Se actualizó correctamente`);
+				$('#modalGuardadoCorrecto').modal('show');
+		}else{
+			$('.modal-GuardadoError').modal('show');
+		}
+	})
+});
 <? if(isset($_GET['idCliente'])){ ?>
 $('#btnEditClientes').click(function() {
-	$.ajax({url: 'php/solicitarTodoCliente.php', type: 'POST', data: { idCli: <?= $idCli; ?>}}).done(function(resp) { console.log(JSON.parse(resp)[0]);
+	$.ajax({url: 'php/solicitarTodoCliente.php', type: 'POST', data: { idCli: '<?= $idCli; ?>'}}).done(function(resp) { console.log(JSON.parse(resp)[0]);
 		var jCliente = JSON.parse(resp)[0];
 		$('#txtPaternoClienteUpd').val(jCliente.cliApellidoPaterno);
 		$('#txtMaternoClienteUpd').val(jCliente.cliApellidoMaterno);
@@ -648,7 +674,7 @@ function bloquearModalCliente(estado) {
 
 }
 $('#sltBuscarPareja').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-  $.ajax({url: 'php/listarDireccionPareja.php', type: 'POST', data: { idCli: $('#sltBuscarPareja').val() }}).done(function(resp) {
+	$.ajax({url: 'php/listarDireccionPareja.php', type: 'POST', data: { idCli: $('#sltBuscarPareja').val() }}).done(function(resp) {
 		var dato = JSON.parse(resp)[0];
 		console.log(dato)
 		$('#slpCalles').val(dato.idCalle).selectpicker('refresh');
