@@ -153,7 +153,10 @@ $codCredito='';
 				<button class="btn btn-infocat btn-outline" id="btnsolicitarDeuda"><i class="icofont-money"></i> Pago global</button>
 				<?php
 				if($rowCr['rematado']==0){ ?>
-				<button class="btn btn-warning btn-outline" id="btnRematarProd"><i class="icofont-money"></i> Rematar</button>
+					<button class="btn btn-negro btn-outline" id="btnReprogramar"><i class="icofont-pen-holder"></i> Reprogramar</button>
+				<?php } 
+				if($rowCr['rematado']==0){ ?>
+					<button class="btn btn-warning btn-outline" id="btnRematarProd"><i class="icofont-pen-alt-3"></i> Rematar</button>
 				<?php } ?>
 			<?php endif; ?>
 			<?php else: ?> 
@@ -497,7 +500,7 @@ $codCredito='';
 	</div>
 </div>
 </div>
-<!-- Modal para saber monto de remate -->
+<!-- Modal para rematar el producto -->
 <div class="modal fade" id="modalRemate" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 <div class="modal-dialog modal-sm" role="document">
 	<div class="modal-content">
@@ -510,6 +513,24 @@ $codCredito='';
 			<input class="form-control text-center" type="number" name="" value="0.00" id="txtValorRemate">
 			<div class="text-right">
 				<button class="btn btn-primary btn-outline" onclick="realizarRemate()"><i class="icofont icofont-paper"></i> Rematar</button>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<!-- Modal para saber reprogramar -->
+<div class="modal fade" id="modalReprogramar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal-dialog modal-sm" role="document">
+	<div class="modal-content">
+		<div class="modal-header-default">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"><i class="icofont icofont-help-robot"></i> Reprogramar</h4>
+		</div>
+		<div class="modal-body">
+			<label for="">¿Cuánto está pagando el cliente para reprogramar?</label>
+			<input class="form-control text-center" type="date" id="txtValorReprogramacion">
+			<div class="text-right">
+				<button class="btn btn-default btn-outline" onclick="realizarReprogramacion()"><i class="icofont-pen-holder"></i> Reprogramar</button>
 			</div>
 		</div>
 	</div>
@@ -982,6 +1003,18 @@ $('#btnDenegarCredito').click(function() {
 		}
 	});
 });
+$('#btnReprogramar').click(function() {
+	$('#txtValorReprogramacion').val(moment().format('YYYY-MM-DD'));
+	$('#modalReprogramar').modal('show');
+});
+function realizarReprogramacion(){
+	$.ajax({url: 'php/updateReprogramacion.php', type: 'POST', data: { credit: '<?= $codCredito; ?>', nuevaFecha: $('#txtValorReprogramacion').val() }}).done(function(resp) { 
+		console.log(resp)
+		if(resp=='ok'){
+			location.reload();
+		}
+	});
+}
 <?php }
 if( in_array($_COOKIE['ckPower'], $soloAutorizados) ){ ?>
 
