@@ -250,7 +250,10 @@ $codCredito='';
 					<td><? if($k>=1) {echo number_format($interes,2);} ?></td>
 					<td><? if($k>=1) {echo number_format($rowCuot['cuotCuota'],2);} ?></td>
 					
-					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'): echo "Desembolso"; elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; else: echo $rowCuot['cuotFechaCancelacion']; endif;  ?></td>
+					<td><?php if($rowCuot['cuotCuota']=='0.00' && $rowCuot['cuotPago']=='0.00'):
+						echo "Desembolso"; 
+						elseif($rowCuot['cuotFechaCancelacion']=='0000-00-00'): echo 'Pendiente'; 
+						else: $fechTemp = new DateTime($rowCuot['cuotFechaCancelacion']); echo $fechTemp->format('d/m/Y');  endif;  ?></td>
 					<td class="tdPagoCli" data-pago="<?= number_format($rowCuot['cuotPago'],2); ?>"><? if($k>=1) {echo number_format($rowCuot['cuotPago'],2);} ?></td>
 					<td class="hidden"><?= number_format($rowCuot['cuotSaldo'],2); ?></td>
 					<td><?php
