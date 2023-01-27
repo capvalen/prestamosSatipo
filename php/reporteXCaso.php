@@ -200,12 +200,14 @@ switch ($_POST['caso']) {
 		<?
 		break;
 	case 'R5':
-		$sql="SELECT `idCaja`,c.`idPrestamo`,`idCuota`, c.cajaFecha, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, c.idtipoProceso, cajaObservacion  
-		FROM `caja` c left join prestamo pre on pre.idPrestamo = c.idPrestamo inner join tipoproceso tp on tp.idtipoproceso = c.idtipoProceso 
-		where date_format(cajaFecha, '%Y-%m-%d') BETWEEN '{$_POST['fInicio']}' and '{$_POST['fFinal']}' and c.idTipoProceso in (21, 31, 32, 33, 44, 75, 45, 80, 81,    43,85,84,83,85 ,82,40,41) and cajaActivo = 1
-		order by cajaFecha, idPrestamo;";
-
-		$aSumar=[21, 31, 32, 33, 44, 75, 45, 80, 81];
+		$sql="SELECT `idCaja`, c.`idPrestamo`, c.`idCuota`, c.cajaFecha, `cajaValor`, pre.presMontoDesembolso, pre.preInteresPers, pre.presPeriodo, tp.tipoDescripcion, cajaObservacion, pc.cuotCuota, c.idTipoProceso
+		FROM `caja` c 
+		inner join tipoproceso tp on tp.idtipoproceso = c.idTipoProceso
+		inner join prestamo_cuotas pc on pc.idCuota = c.idCuota
+		left join prestamo pre on pre.idPrestamo = c.idPrestamo
+		where date_format(cajaFecha, '%Y-%m-%d') BETWEEN '{$_POST['fInicio']}' and '{$_POST['fFinal']}' and c.idTipoProceso in (21, 33, 44, 45, 80, 81  ) and cajaActivo = 1
+		order by cajaFecha, idPrestamo;"; //Resta: 43,85,84,83,85 ,82,40,41
+		//echo $sql; die();
 
 		$resultado=$cadena->query($sql);
 		?> 
@@ -215,24 +217,47 @@ switch ($_POST['caso']) {
 				<th>Cod. Pre.</th>
 				<th>ID Cuota</th>
 				<th>Proceso</th>
-				<th>Valor</th>
+				<th>Cuota</th>
+				<th>Pagado</th>
+				<th>Ganancia</th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php
+		$sumaGanancia = 0;
+		$inversion = 0;
 
 		while($row=$resultado->fetch_assoc()){ ?>
 			<tr>
 				<td><?= $row['cajaFecha']; ?></td>
-				<td><?= "CR-{$row['idPrestamo']}"; ?></td>
-				<td><?= $row['idCuota']; ?></td>
+				<td><a href="creditos.php?credito=<?= $base58->encode($row['idPrestamo']);?>">CR-<?= $row['idPrestamo'];?></a></td>
+				<td><?= $row['idCuota']; ?> / <?= $row['idTipoProceso']; ?></td>
 				<td><?= $row['tipoDescripcion']; ?><?php if($row['cajaObservacion']<>''): echo"<br><em class='mayuscula'>{$row['cajaObservacion']}</em>"; endif; ?></td>
 				
-				<?php if( in_array($row['idtipoProceso'], $aSumar) ): $sumaTodo+=floatval($row['cajaValor']); ?>
-					<td class="text-primary">+<?= number_format($row['cajaValor'],2); ?></td>
-				<?php else: $sumaTodo-=floatval($row['cajaValor']); ?>
-					<td class="text-danger">-<?= number_format($row['cajaValor'],2); ?></td>
-				<?php endif; ?>
+				<td class=""><?= number_format($row['cuotCuota'],2); ?></td>
+				<?php
+				$inversion += $row['cuotCuota'];
+				$sumaTodo+=floatval($row['cajaValor']); ?>
+				<td class=""><?= number_format($row['cajaValor'],2); ?></td>
+				<td class="text-primary">+<?php
+				switch( $row['idTipoProceso'] ){
+					case '21': case '81':
+						$resumenGanancia = $row['cajaValor'];
+						break;
+					case '33': case '45':
+						$qGanancia =  $row['cuotCuota'] - $row['presMontoDesembolso']/$row['presPeriodo'];
+						$qPorcentaje = $row['cajaValor'] / $row['cuotCuota'];
+						$resumenGanancia = $qGanancia * $qPorcentaje ;
+					break;
+					case '44': case '80':
+						$qGanancia =  $row['cuotCuota'] - $row['presMontoDesembolso']/$row['presPeriodo'];
+						$resumenGanancia = $qGanancia;
+					break;
+				}
+				$sumaGanancia += $resumenGanancia;
+				echo number_format($resumenGanancia, 2); 
+
+				?></td>
 			</tr>
 		<?php
 		}?> 
@@ -242,8 +267,10 @@ switch ($_POST['caso']) {
 				<td></td>
 				<td></td>
 				<td></td>
+				<th>S/ <?= number_format($inversion,2);?></th>
 				<th>S/ <?= number_format($sumaTodo,2);?></th>
-				<td></td>
+				<th>S/ <?= number_format($sumaGanancia,2);?></th>
+				
 			</tfoot>
 		<?php
 
