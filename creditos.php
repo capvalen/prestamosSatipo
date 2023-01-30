@@ -330,7 +330,6 @@ $codCredito='';
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th>Agencia</th>
 									<th>N° Crédito</th>
 									<th>Monto desembolsado</th>
 									<th>Cuota</th>
