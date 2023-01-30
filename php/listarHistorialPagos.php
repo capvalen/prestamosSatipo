@@ -16,11 +16,9 @@ order by cuotfechaPago desc;";
 $resultado=$cadena->query($sql);
 while($row=$resultado->fetch_assoc()){ ?>
   <tr>
-    <td>Huancayo</td>
     <td><a href="creditos.php?credito=<?= $base58->encode($row['idPrestamo']);?>"><?= $row['idPrestamo']; ?></a></td>
     <td><?= number_format($row['presMontoDesembolso'],2); ?></td>
     <td><?= number_format($row['cuotCuota'],2); ?></td>
-    <td>k</td>
     <td><?php if($row['presFechaDesembolso'] <>'0000-00-00 00:00:00'){ $fechaJ= new DateTime( $row['presFechaDesembolso']); echo $fechaJ->format('d/m/Y'); }else{echo 'Pendiente';}?></td>
     <td><?php if(is_null($row['fechaFinPrestamo'])){ echo 'Vigente';}else{echo $row['fechaFinPrestamo'];} ?></td>
     <td><?= $row['tpreDescipcion']."-".$row['presPeriodo']; ?></td>
