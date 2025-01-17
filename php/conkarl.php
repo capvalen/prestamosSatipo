@@ -4,7 +4,7 @@ $server="localhost";
 /* Net	*/
 $username="root";
 $password="*123456*";
-$db='prestamoscomplex';
+$db='prestamossatipo';
 
 global $conection;
 global $cadena;
